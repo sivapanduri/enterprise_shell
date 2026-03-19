@@ -1,0 +1,75 @@
+# =========================
+# Python
+# =========================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# =========================
+# Flask / Instance
+# =========================
+instance/
+*.db
+*.sqlite3
+
+# =========================
+# Environment variables
+# =========================
+.env
+.env.*
+!.env.example
+
+# =========================
+# Logs
+# =========================
+*.log
+logs/
+
+# =========================
+# OS files
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# Editor / IDE
+# =========================
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# =========================
+# Coverage / Testing
+# =========================
+.coverage
+htmlcov/
+.pytest_cache/
+
+# =========================
+# Node (future-proofing, even if minimal JS)
+# =========================
+node_modules/
+
+# =========================
+# Static build artifacts (if added later)
+# =========================
+dist/
+build/
+
+# =========================
+# Migrations cache (not actual versions)
+# =========================
+migrations/__pycache__/
+
+# =========================
+# Docker
+# =========================
+*.env.local

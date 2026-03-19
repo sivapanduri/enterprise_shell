@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}{{ branding.app_name }}{% endblock %}</title>
+
+    <style>
+        :root {
+            --color-primary: {{ branding.theme_primary }};
+            --color-secondary: {{ branding.theme_secondary }};
+            --color-accent: {{ branding.theme_accent }};
+            --color-text: #1f2937;
+            --color-muted: #6b7280;
+            --color-border: #dbe3ef;
+            --color-surface: #ffffff;
+            --color-surface-soft: #f7f9fc;
+            --shadow-soft: 0 10px 30px rgba(15, 23, 42, 0.08);
+            --radius: 14px;
+            --container-width: 1120px;
+        }
+    </style>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+    {% block head %}{% endblock %}
+</head>
+<body>
+    {% block body %}{% endblock %}
+</body>
+</html>

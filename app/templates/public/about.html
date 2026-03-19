@@ -1,0 +1,42 @@
+{% extends "_layouts/public_base.html" %}
+
+{% block title %}About | {{ branding.app_name }}{% endblock %}
+
+{% block content %}
+<section class="content-section">
+    <div class="page-header">
+        <span class="eyebrow">About the shell</span>
+        <h1>Why this foundation exists</h1>
+        <p class="page-subtitle">
+            This project is a reusable enterprise base meant to support multiple
+            future applications with a stable architectural core.
+        </p>
+    </div>
+
+    <div class="section-grid">
+        <article class="info-card">
+            <h3>Server-rendered first</h3>
+            <p>
+                The shell is built for maintainable enterprise workflows using Flask,
+                Jinja, forms, and clear route/service separation.
+            </p>
+        </article>
+
+        <article class="info-card">
+            <h3>Reusable by design</h3>
+            <p>
+                Branding, settings, navigation, authentication, audit, and restoration
+                are intended to be reusable across future business products.
+            </p>
+        </article>
+
+        <article class="info-card">
+            <h3>Production-minded structure</h3>
+            <p>
+                The app factory, config system, extension registry, blueprint structure,
+                and deployment entry points are established from the start.
+            </p>
+        </article>
+    </div>
+</section>
+{% endblock %}

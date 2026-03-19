@@ -1,0 +1,14 @@
+{% extends "_layouts/base.html" %}
+
+{% block body %}
+    {% include "_partials/public_navbar.html" %}
+
+    <main class="page-shell">
+        <div class="container">
+            {% include "_partials/flashes.html" %}
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    {% include "_partials/footer.html" %}
+{% endblock %}

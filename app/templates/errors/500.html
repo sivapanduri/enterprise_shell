@@ -1,0 +1,14 @@
+{% extends "_layouts/public_base.html" %}
+
+{% block title %}Server Error | {{ branding.app_name }}{% endblock %}
+
+{% block content %}
+<section class="content-section narrow">
+    <div class="info-card">
+        <span class="eyebrow">500</span>
+        <h1>Something went wrong</h1>
+        <p>An unexpected error occurred while processing the request.</p>
+        <a class="btn btn-primary" href="{{ url_for('public.home') }}">Back to Home</a>
+    </div>
+</section>
+{% endblock %}
