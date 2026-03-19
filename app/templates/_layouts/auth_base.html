@@ -1,0 +1,10 @@
+{% extends "_layouts/base.html" %}
+
+{% block body %}
+<main class="auth-shell">
+    <div class="auth-card-wrap">
+        {% include "_partials/flashes.html" %}
+        {% block content %}{% endblock %}
+    </div>
+</main>
+{% endblock %}

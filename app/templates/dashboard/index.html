@@ -1,0 +1,34 @@
+{% extends "_layouts/app_base.html" %}
+
+{% block title %}Dashboard | {{ branding.app_name }}{% endblock %}
+
+{% block content %}
+<section class="content-section">
+    <div class="page-header">
+        <span class="eyebrow">Admin shell</span>
+        <h1>Welcome, {{ current_user.display_name }}</h1>
+        <p class="page-subtitle">
+            Authentication is now active and the shell has its first protected workspace.
+        </p>
+    </div>
+
+    <div class="section-grid">
+        <article class="info-card">
+            <h3>Total users</h3>
+            <p class="metric-value">{{ stats.total_users }}</p>
+        </article>
+
+        <article class="info-card">
+            <h3>Active users</h3>
+            <p class="metric-value">{{ stats.active_users }}</p>
+        </article>
+
+        <article class="info-card">
+            <h3>Current account</h3>
+            <p><strong>Email:</strong> {{ current_user.email }}</p>
+            <p><strong>Username:</strong> {{ current_user.username }}</p>
+            <p><strong>Super admin:</strong> {{ "Yes" if current_user.is_superadmin else "No" }}</p>
+        </article>
+    </div>
+</section>
+{% endblock %}

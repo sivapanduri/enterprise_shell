@@ -1,14 +1,10 @@
 from flask import current_app
+from flask_login import current_user
 
 
 def register_context_processors(app) -> None:
     @app.context_processor
     def inject_shell_context():
-        """
-        Expose shell-wide template context from one controlled place.
-
-        Later this will be replaced or enriched by branding and settings services.
-        """
         return {
             "branding": {
                 "app_name": current_app.config["APP_NAME"],
@@ -20,5 +16,6 @@ def register_context_processors(app) -> None:
                 "theme_primary": current_app.config["THEME_PRIMARY"],
                 "theme_secondary": current_app.config["THEME_SECONDARY"],
                 "theme_accent": current_app.config["THEME_ACCENT"],
-            }
+            },
+            "current_user": current_user,
         }

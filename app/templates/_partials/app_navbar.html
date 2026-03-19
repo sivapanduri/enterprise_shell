@@ -1,0 +1,27 @@
+<header class="public-navbar">
+    <div class="container navbar-inner">
+        <a class="brand" href="{{ url_for('dashboard.index') }}">
+            <img
+                src="{{ url_for('static', filename=branding.app_logo) }}"
+                alt="{{ branding.app_name }} logo"
+                class="brand-logo"
+            >
+            <div class="brand-copy">
+                <span class="brand-title">{{ branding.app_name }}</span>
+                <span class="brand-tagline">Authenticated workspace</span>
+            </div>
+        </a>
+
+        <nav class="nav-links">
+            <a href="{{ url_for('dashboard.index') }}">Dashboard</a>
+            <a href="{{ url_for('public.home') }}">Public Home</a>
+
+            <span class="nav-user">Signed in as {{ current_user.display_name }}</span>
+
+            <form method="post" action="{{ url_for('auth.logout') }}" class="inline-form">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="btn btn-secondary btn-small">Logout</button>
+            </form>
+        </nav>
+    </div>
+</header>
