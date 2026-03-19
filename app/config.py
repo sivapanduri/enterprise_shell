@@ -7,7 +7,7 @@ class BaseConfig:
 
     SQLALCHEMY_DATABASE_URI = os.getenv(
         "DATABASE_URL",
-        "postgresql://postgres:postgres@localhost:5432/enterprise_shell",
+        "postgresql+psycopg://postgres:postgres@localhost:5432/enterprise_shell",
     )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
