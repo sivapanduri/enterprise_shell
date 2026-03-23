@@ -37,6 +37,13 @@ class User(UserMixin, db.Model):
         onupdate=lambda: datetime.now(timezone.utc),
     )
 
+    roles = db.relationship(
+        "UserRole",
+        foreign_keys="UserRole.user_id",
+        back_populates="user",
+        cascade="all, delete-orphan",
+    )
+
     def set_password(self, raw_password: str) -> None:
         self.password_hash = generate_password_hash(raw_password)
 
@@ -49,6 +56,28 @@ class User(UserMixin, db.Model):
             part for part in [self.first_name, self.last_name] if part
         ).strip()
         return full_name or self.username
+
+    def get_role_names(self) -> set[str]:
+        return {user_role.role.name for user_role in self.roles if user_role.role}
+
+    def get_permission_names(self) -> set[str]:
+        permission_names = set()
+
+        for user_role in self.roles:
+            if not user_role.role:
+                continue
+
+            for role_permission in user_role.role.permissions:
+                if role_permission.permission:
+                    permission_names.add(role_permission.permission.name)
+
+        return permission_names
+
+    def has_permission(self, permission_name: str) -> bool:
+        if self.is_superadmin:
+            return True
+
+        return permission_name in self.get_permission_names()
 
     def __repr__(self) -> str:
         return f"<User {self.email}>"

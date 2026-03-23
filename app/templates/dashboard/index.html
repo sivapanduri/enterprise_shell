@@ -8,7 +8,7 @@
     ] %}
     {% set eyebrow = "Admin shell" %}
     {% set title = "Dashboard" %}
-    {% set subtitle = "This is now the authenticated enterprise workspace foundation for future modules." %}
+    {% set subtitle = "The shell now uses permission-based access control as the foundation for future enterprise modules." %}
     {% set actions = '
         <a class="btn btn-secondary" href="' ~ url_for("public.home") ~ '">View Public Site</a>
     ' %}
@@ -24,28 +24,33 @@
             {% include "_components/stat_card.html" %}
         {% endwith %}
 
-        {% with label="Shell stage", value="3", hint="Authenticated admin shell is active" %}
+        {% with label="Roles", value=stats.total_roles, hint="RBAC roles now stored in database" %}
+            {% include "_components/stat_card.html" %}
+        {% endwith %}
+
+        {% with label="Permissions", value=stats.total_permissions, hint="System permissions seeded from registry" %}
             {% include "_components/stat_card.html" %}
         {% endwith %}
     </section>
 
-    <section class="dashboard-grid">
+    <section class="dashboard-grid dashboard-grid-2">
         <article class="info-card">
-            <h3>Foundation status</h3>
+            <h3>RBAC foundation is active</h3>
             <p>
-                The application now has a reusable authenticated shell with a fixed layout,
-                structured navigation, and a dashboard area ready for future modules.
+                The shell now uses database-backed roles and permissions instead of relying
+                only on authentication state. This creates the foundation for user management,
+                role assignment, settings access, audit visibility, and future module control.
             </p>
             <ul class="feature-list">
-                <li>Topbar and sidebar are in place</li>
-                <li>Dashboard uses reusable cards</li>
-                <li>Navigation is centrally defined</li>
-                <li>Future admin modules can plug into this shell cleanly</li>
+                <li>Permissions are centrally registered</li>
+                <li>Roles and permissions are stored in database tables</li>
+                <li>Route protection now supports permission checks</li>
+                <li>Super-admin remains a controlled bypass</li>
             </ul>
         </article>
 
         <article class="info-card">
-            <h3>Current account</h3>
+            <h3>Current account access</h3>
             <dl class="status-list">
                 <dt>Name</dt>
                 <dd>{{ current_user.display_name }}</dd>
@@ -53,21 +58,18 @@
                 <dt>Email</dt>
                 <dd>{{ current_user.email }}</dd>
 
-                <dt>Username</dt>
-                <dd>{{ current_user.username }}</dd>
-
                 <dt>Super admin</dt>
                 <dd>{{ "Yes" if current_user.is_superadmin else "No" }}</dd>
-            </dl>
-        </article>
 
-        <article class="info-card">
-            <h3>Next module direction</h3>
-            <p>
-                The next logical step is to add RBAC (Role-Based Access Control),
-                then user management screens, and then settings, branding, audit,
-                and restoration capabilities.
-            </p>
+                <dt>Roles</dt>
+                <dd>
+                    {% set role_names = current_user.get_role_names() %}
+                    {{ role_names|join(", ") if role_names else "None assigned" }}
+                </dd>
+
+                <dt>Permissions</dt>
+                <dd>{{ current_user.get_permission_names()|length }}</dd>
+            </dl>
         </article>
     </section>
 {% endblock %}

@@ -47,4 +47,15 @@
             </div>
         {% endfor %}
     </nav>
+
+    <div class="sidebar-footer">
+        <div class="sidebar-footer-label">Access mode</div>
+        <div class="sidebar-footer-value">
+            {% if current_user.is_superadmin %}
+                Super Admin
+            {% else %}
+                Permission Driven
+            {% endif %}
+        </div>
+    </div>
 </aside>

@@ -404,6 +404,8 @@ a:hover {
     position: sticky;
     top: 0;
     align-self: start;
+    display: flex;
+    flex-direction: column;
 }
 
 .sidebar-brand {
@@ -686,6 +688,36 @@ a:hover {
 
     .stats-grid,
     .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.sidebar-footer {
+    margin-top: auto;
+    padding: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.sidebar-footer-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    opacity: 0.7;
+    font-weight: 700;
+}
+
+.sidebar-footer-value {
+    margin-top: 0.35rem;
+    font-weight: 700;
+}
+
+.dashboard-grid-2 {
+    grid-template-columns: 1.3fr 1fr;
+}
+
+@media (max-width: 1100px) {
+    .dashboard-grid-2 {
         grid-template-columns: 1fr;
     }
 }
