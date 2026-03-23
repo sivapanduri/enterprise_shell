@@ -1,0 +1,60 @@
+<div class="form-grid">
+    <div class="form-group">
+        <label for="{{ form.email.id }}">{{ form.email.label.text }}</label>
+        {{ form.email(class_="form-control", placeholder="user@example.com") }}
+        {% for error in form.email.errors %}
+            <div class="field-error">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="form-group">
+        <label for="{{ form.username.id }}">{{ form.username.label.text }}</label>
+        {{ form.username(class_="form-control", placeholder="username") }}
+        {% for error in form.username.errors %}
+            <div class="field-error">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="form-group">
+        <label for="{{ form.first_name.id }}">{{ form.first_name.label.text }}</label>
+        {{ form.first_name(class_="form-control", placeholder="First name") }}
+        {% for error in form.first_name.errors %}
+            <div class="field-error">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="form-group">
+        <label for="{{ form.last_name.id }}">{{ form.last_name.label.text }}</label>
+        {{ form.last_name(class_="form-control", placeholder="Last name") }}
+        {% for error in form.last_name.errors %}
+            <div class="field-error">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    {% if form.password is defined %}
+        <div class="form-group form-group-full">
+            <label for="{{ form.password.id }}">{{ form.password.label.text }}</label>
+            {{ form.password(class_="form-control", placeholder="Enter a secure password") }}
+            {% for error in form.password.errors %}
+                <div class="field-error">{{ error }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="form-check-stack form-group-full">
+        <label class="checkbox-line">
+            {{ form.is_active() }}
+            <span>{{ form.is_active.label.text }}</span>
+        </label>
+
+        <label class="checkbox-line">
+            {{ form.is_superadmin() }}
+            <span>{{ form.is_superadmin.label.text }}</span>
+        </label>
+
+        <label class="checkbox-line">
+            {{ form.must_change_password() }}
+            <span>{{ form.must_change_password.label.text }}</span>
+        </label>
+    </div>
+</div>

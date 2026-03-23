@@ -1,0 +1,28 @@
+{% extends "_layouts/app_base.html" %}
+
+{% block title %}Create User | {{ branding.app_name }}{% endblock %}
+
+{% block admin_content %}
+    {% set breadcrumbs = [
+        {"label": "Dashboard", "url": url_for("dashboard.index")},
+        {"label": "Users", "url": url_for("users.list_users")},
+        {"label": "Create", "url": None}
+    ] %}
+    {% set eyebrow = "User management" %}
+    {% set title = "Create User" %}
+    {% set subtitle = "Create a new shell user and define the initial account state." %}
+
+    {% include "_partials/page_header.html" %}
+
+    <section class="form-card">
+        <form method="post" novalidate>
+            {{ form.hidden_tag() }}
+            {% include "users/_form.html" %}
+
+            <div class="form-actions-row">
+                {{ form.submit(class_="btn btn-primary") }}
+                <a class="btn btn-secondary" href="{{ url_for('users.list_users') }}">Cancel</a>
+            </div>
+        </form>
+    </section>
+{% endblock %}

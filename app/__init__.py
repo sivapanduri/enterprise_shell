@@ -3,6 +3,7 @@ from flask import Flask
 from app.blueprints.auth import auth_bp
 from app.blueprints.dashboard import dashboard_bp
 from app.blueprints.public import public_bp
+from app.blueprints.users import users_bp
 from app.config import config_by_name
 from app.core.context_processors import register_context_processors
 from app.core.error_handlers import register_error_handlers
@@ -34,6 +35,7 @@ def register_blueprints(app: Flask) -> None:
     app.register_blueprint(public_bp)
     app.register_blueprint(auth_bp)
     app.register_blueprint(dashboard_bp)
+    app.register_blueprint(users_bp)
 
 
 def register_commands(app: Flask) -> None:
@@ -78,9 +80,6 @@ def register_commands(app: Flask) -> None:
 
     @app.cli.command("seed-permissions")
     def seed_permissions():
-        """
-        Seed or update the permission catalog from the central registry.
-        """
         created_count = 0
 
         for permission_name, module, description in PERMISSIONS:
@@ -110,9 +109,6 @@ def register_commands(app: Flask) -> None:
         help="System role name to create or update.",
     )
     def bootstrap_rbac(role_name):
-        """
-        Create a baseline admin role and attach all current permissions.
-        """
         role = Role.query.filter_by(name=role_name).first()
         if not role:
             role = Role(
@@ -150,9 +146,6 @@ def register_commands(app: Flask) -> None:
     @click.option("--email", prompt=True)
     @click.option("--role-name", prompt=True)
     def assign_role(email, role_name):
-        """
-        Assign an existing role to a user.
-        """
         email = email.strip().lower()
         role_name = role_name.strip()
 

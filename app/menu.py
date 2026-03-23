@@ -12,13 +12,6 @@ class MenuItem:
 
 
 def get_admin_menu() -> list[MenuItem]:
-    """
-    Central menu definition for the authenticated shell.
-
-    Keep this simple in Stage 3.
-    In later stages, this same structure can become RBAC-aware
-    without rewriting templates.
-    """
     return [
         MenuItem(
             key="dashboard",
@@ -34,7 +27,7 @@ def get_admin_menu() -> list[MenuItem]:
                 MenuItem(
                     key="users",
                     label="Users",
-                    endpoint=None,
+                    endpoint="users.list_users",
                     icon="users",
                 ),
                 MenuItem(

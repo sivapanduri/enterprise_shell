@@ -1,0 +1,86 @@
+{% extends "_layouts/app_base.html" %}
+
+{% block title %}User Detail | {{ branding.app_name }}{% endblock %}
+
+{% block admin_content %}
+    {% set breadcrumbs = [
+        {"label": "Dashboard", "url": url_for("dashboard.index")},
+        {"label": "Users", "url": url_for("users.list_users")},
+        {"label": user.display_name, "url": None}
+    ] %}
+    {% set eyebrow = "User management" %}
+    {% set title = user.display_name %}
+    {% set subtitle = "Detailed user account view for administration and role assignment." %}
+    {% set actions = '
+        <a class="btn btn-secondary" href="' ~ url_for("users.edit_user", user_id=user.id) ~ '">Edit</a>
+        <a class="btn btn-secondary" href="' ~ url_for("users.assign_roles", user_id=user.id) ~ '">Manage Roles</a>
+    ' %}
+
+    {% include "_partials/page_header.html" %}
+
+    <section class="detail-grid">
+        <article class="info-card">
+            <h3>Account details</h3>
+            <dl class="status-list">
+                <dt>Name</dt>
+                <dd>{{ user.display_name }}</dd>
+
+                <dt>Email</dt>
+                <dd>{{ user.email }}</dd>
+
+                <dt>Username</dt>
+                <dd>{{ user.username }}</dd>
+
+                <dt>Status</dt>
+                <dd>{{ "Active" if user.is_active else "Inactive" }}</dd>
+
+                <dt>Super admin</dt>
+                <dd>{{ "Yes" if user.is_superadmin else "No" }}</dd>
+
+                <dt>Must change password</dt>
+                <dd>{{ "Yes" if user.must_change_password else "No" }}</dd>
+
+                <dt>Last login</dt>
+                <dd>{{ user.last_login_at or "Never" }}</dd>
+
+                <dt>Last login IP</dt>
+                <dd>{{ user.last_login_ip or "—" }}</dd>
+            </dl>
+        </article>
+
+        <article class="info-card">
+            <h3>Role access</h3>
+            {% set role_names = user.get_role_names() %}
+            {% if role_names %}
+                <ul class="feature-list">
+                    {% for role_name in role_names %}
+                        <li>{{ role_name }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No roles assigned.</p>
+            {% endif %}
+
+            <p><strong>Resolved permissions:</strong> {{ user.get_permission_names()|length }}</p>
+
+            <div class="stack-actions">
+                <a class="btn btn-secondary" href="{{ url_for('users.assign_roles', user_id=user.id) }}">Assign Roles</a>
+            </div>
+        </article>
+
+        <article class="info-card">
+            <h3>Account state</h3>
+            <p>
+                Use the action below to {{ "deactivate" if user.is_active else "activate" }}
+                this user account.
+            </p>
+
+            <form method="post" action="{{ url_for('users.toggle_active', user_id=user.id) }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="btn btn-secondary">
+                    {{ "Deactivate User" if user.is_active else "Activate User" }}
+                </button>
+            </form>
+        </article>
+    </section>
+{% endblock %}
