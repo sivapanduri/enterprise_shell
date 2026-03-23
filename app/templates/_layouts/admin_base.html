@@ -1,0 +1,20 @@
+{% extends "_layouts/base.html" %}
+
+{% block body %}
+<div class="admin-shell">
+    {% include "_partials/admin_sidebar.html" %}
+
+    <div class="admin-main">
+        {% include "_partials/admin_topbar.html" %}
+
+        <main class="admin-content">
+            <div class="admin-content-inner">
+                {% include "_partials/flashes.html" %}
+                {% block admin_content %}{% endblock %}
+            </div>
+        </main>
+
+        {% include "_partials/footer.html" %}
+    </div>
+</div>
+{% endblock %}

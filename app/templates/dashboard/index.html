@@ -2,33 +2,72 @@
 
 {% block title %}Dashboard | {{ branding.app_name }}{% endblock %}
 
-{% block content %}
-<section class="content-section">
-    <div class="page-header">
-        <span class="eyebrow">Admin shell</span>
-        <h1>Welcome, {{ current_user.display_name }}</h1>
-        <p class="page-subtitle">
-            Authentication is now active and the shell has its first protected workspace.
-        </p>
-    </div>
+{% block admin_content %}
+    {% set breadcrumbs = [
+        {"label": "Dashboard", "url": None}
+    ] %}
+    {% set eyebrow = "Admin shell" %}
+    {% set title = "Dashboard" %}
+    {% set subtitle = "This is now the authenticated enterprise workspace foundation for future modules." %}
+    {% set actions = '
+        <a class="btn btn-secondary" href="' ~ url_for("public.home") ~ '">View Public Site</a>
+    ' %}
 
-    <div class="section-grid">
-        <article class="info-card">
-            <h3>Total users</h3>
-            <p class="metric-value">{{ stats.total_users }}</p>
-        </article>
+    {% include "_partials/page_header.html" %}
 
+    <section class="stats-grid">
+        {% with label="Total users", value=stats.total_users, hint="All accounts in the shell" %}
+            {% include "_components/stat_card.html" %}
+        {% endwith %}
+
+        {% with label="Active users", value=stats.active_users, hint="Accounts currently enabled" %}
+            {% include "_components/stat_card.html" %}
+        {% endwith %}
+
+        {% with label="Shell stage", value="3", hint="Authenticated admin shell is active" %}
+            {% include "_components/stat_card.html" %}
+        {% endwith %}
+    </section>
+
+    <section class="dashboard-grid">
         <article class="info-card">
-            <h3>Active users</h3>
-            <p class="metric-value">{{ stats.active_users }}</p>
+            <h3>Foundation status</h3>
+            <p>
+                The application now has a reusable authenticated shell with a fixed layout,
+                structured navigation, and a dashboard area ready for future modules.
+            </p>
+            <ul class="feature-list">
+                <li>Topbar and sidebar are in place</li>
+                <li>Dashboard uses reusable cards</li>
+                <li>Navigation is centrally defined</li>
+                <li>Future admin modules can plug into this shell cleanly</li>
+            </ul>
         </article>
 
         <article class="info-card">
             <h3>Current account</h3>
-            <p><strong>Email:</strong> {{ current_user.email }}</p>
-            <p><strong>Username:</strong> {{ current_user.username }}</p>
-            <p><strong>Super admin:</strong> {{ "Yes" if current_user.is_superadmin else "No" }}</p>
+            <dl class="status-list">
+                <dt>Name</dt>
+                <dd>{{ current_user.display_name }}</dd>
+
+                <dt>Email</dt>
+                <dd>{{ current_user.email }}</dd>
+
+                <dt>Username</dt>
+                <dd>{{ current_user.username }}</dd>
+
+                <dt>Super admin</dt>
+                <dd>{{ "Yes" if current_user.is_superadmin else "No" }}</dd>
+            </dl>
         </article>
-    </div>
-</section>
+
+        <article class="info-card">
+            <h3>Next module direction</h3>
+            <p>
+                The next logical step is to add RBAC (Role-Based Access Control),
+                then user management screens, and then settings, branding, audit,
+                and restoration capabilities.
+            </p>
+        </article>
+    </section>
 {% endblock %}
