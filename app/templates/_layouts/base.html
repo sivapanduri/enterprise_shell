@@ -5,11 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}{{ branding.app_name }}{% endblock %}</title>
 
+    {% if branding.favicon_path %}
+        <link rel="icon" href="{{ url_for('static', filename=branding.favicon_path) }}">
+    {% endif %}
+
     <style>
         :root {
-            --color-primary: {{ branding.theme_primary }};
-            --color-secondary: {{ branding.theme_secondary }};
-            --color-accent: {{ branding.theme_accent }};
+            --color-primary: {{ branding.primary_color }};
+            --color-secondary: {{ branding.secondary_color }};
+            --color-accent: {{ branding.accent_color }};
             --color-text: #1f2937;
             --color-muted: #6b7280;
             --color-border: #dbe3ef;
@@ -24,7 +28,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
     {% block head %}{% endblock %}
 </head>
-<body>
+<body class="sidebar-{{ branding.sidebar_style }} navbar-{{ branding.navbar_style }}">
     {% block body %}{% endblock %}
 </body>
 </html>

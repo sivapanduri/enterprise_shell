@@ -1,6 +1,7 @@
 from flask import Flask
 
 from app.blueprints.auth import auth_bp
+from app.blueprints.branding import branding_bp
 from app.blueprints.dashboard import dashboard_bp
 from app.blueprints.public import public_bp
 from app.blueprints.roles import roles_bp
@@ -40,6 +41,7 @@ def register_blueprints(app: Flask) -> None:
     app.register_blueprint(users_bp)
     app.register_blueprint(roles_bp)
     app.register_blueprint(settings_bp)
+    app.register_blueprint(branding_bp)
 
 
 def register_commands(app: Flask) -> None:
@@ -125,9 +127,7 @@ def register_commands(app: Flask) -> None:
             db.session.commit()
 
         permissions = Permission.query.all()
-        existing_permission_ids = {
-            rp.permission_id for rp in role.permissions
-        }
+        existing_permission_ids = {rp.permission_id for rp in role.permissions}
 
         attached_count = 0
         for permission in permissions:

@@ -48,6 +48,12 @@ def get_admin_menu() -> list[MenuItem]:
                     endpoint="settings.index",
                     icon="settings",
                 ),
+                MenuItem(
+                    key="branding",
+                    label="Branding",
+                    endpoint="branding.index",
+                    icon="palette",
+                ),
             ],
         ),
         MenuItem(

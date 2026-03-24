@@ -1,0 +1,61 @@
+{% extends "_layouts/app_base.html" %}
+
+{% block title %}Branding | {{ branding.app_name }}{% endblock %}
+
+{% block admin_content %}
+    {% set breadcrumbs = [
+        {"label": "Dashboard", "url": url_for("dashboard.index")},
+        {"label": "Branding", "url": None}
+    ] %}
+    {% set eyebrow = "Administration" %}
+    {% set title = "Branding" %}
+    {% set subtitle = "Manage visual identity, login content, and public-site messaging for this shell." %}
+
+    {% include "_partials/page_header.html" %}
+
+    <section class="stats-grid">
+        {% with label="Themes", value=stats.total_themes, hint="Branding theme records in database" %}
+            {% include "_components/stat_card.html" %}
+        {% endwith %}
+        {% with label="Active theme", value=stats.active_theme_name, hint="Currently resolved brand theme" %}
+            {% include "_components/stat_card.html" %}
+        {% endwith %}
+        {% with label="Primary color", value=stats.primary_color, hint="Current theme primary color" %}
+            {% include "_components/stat_card.html" %}
+        {% endwith %}
+    </section>
+
+    <section class="dashboard-grid dashboard-grid-2">
+        <article class="info-card">
+            <h3>Theme settings</h3>
+            <p>Change app name, tagline, logo path, colors, footer text, and shell style settings.</p>
+            <div class="stack-actions">
+                <a class="btn btn-primary" href="{{ url_for('branding.theme') }}">Open Theme Settings</a>
+            </div>
+        </article>
+
+        <article class="info-card">
+            <h3>Login page branding</h3>
+            <p>Control the login title and subtitle shown to users before authentication.</p>
+            <div class="stack-actions">
+                <a class="btn btn-primary" href="{{ url_for('branding.login_page') }}">Open Login Branding</a>
+            </div>
+        </article>
+
+        <article class="info-card">
+            <h3>Public page branding</h3>
+            <p>Control the public landing hero title and supporting copy.</p>
+            <div class="stack-actions">
+                <a class="btn btn-primary" href="{{ url_for('branding.public_site') }}">Open Public Branding</a>
+            </div>
+        </article>
+
+        <article class="info-card">
+            <h3>Preview</h3>
+            <p>Preview the currently resolved branding values in one place.</p>
+            <div class="stack-actions">
+                <a class="btn btn-primary" href="{{ url_for('branding.preview') }}">Open Preview</a>
+            </div>
+        </article>
+    </section>
+{% endblock %}

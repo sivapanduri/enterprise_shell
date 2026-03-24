@@ -1,0 +1,41 @@
+{% extends "_layouts/app_base.html" %}
+
+{% block title %}Public Branding | {{ branding.app_name }}{% endblock %}
+
+{% block admin_content %}
+    {% set breadcrumbs = [
+        {"label": "Dashboard", "url": url_for("dashboard.index")},
+        {"label": "Branding", "url": url_for("branding.index")},
+        {"label": "Public", "url": None}
+    ] %}
+    {% set eyebrow = "Branding" %}
+    {% set title = "Public Branding" %}
+    {% set subtitle = "Control the hero content shown on the public landing page." %}
+
+    {% include "_partials/page_header.html" %}
+
+    <section class="form-card">
+        <form method="post" novalidate>
+            {{ form.hidden_tag() }}
+
+            <div class="form-grid">
+                <div class="form-group form-group-full">
+                    <label for="{{ form.public_hero_title.id }}">{{ form.public_hero_title.label.text }}</label>
+                    {{ form.public_hero_title(class_="form-control") }}
+                    {% for error in form.public_hero_title.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+                </div>
+
+                <div class="form-group form-group-full">
+                    <label for="{{ form.public_hero_subtitle.id }}">{{ form.public_hero_subtitle.label.text }}</label>
+                    {{ form.public_hero_subtitle(class_="form-control form-control-textarea", rows="5") }}
+                    {% for error in form.public_hero_subtitle.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+                </div>
+            </div>
+
+            <div class="form-actions-row">
+                {{ form.submit(class_="btn btn-primary") }}
+                <a class="btn btn-secondary" href="{{ url_for('branding.index') }}">Back</a>
+            </div>
+        </form>
+    </section>
+{% endblock %}

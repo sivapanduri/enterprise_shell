@@ -1,0 +1,95 @@
+{% extends "_layouts/app_base.html" %}
+
+{% block title %}Theme Settings | {{ branding.app_name }}{% endblock %}
+
+{% block admin_content %}
+    {% set breadcrumbs = [
+        {"label": "Dashboard", "url": url_for("dashboard.index")},
+        {"label": "Branding", "url": url_for("branding.index")},
+        {"label": "Theme", "url": None}
+    ] %}
+    {% set eyebrow = "Branding" %}
+    {% set title = "Theme Settings" %}
+    {% set subtitle = "Update app identity, asset paths, color palette, and theme presentation." %}
+
+    {% include "_partials/page_header.html" %}
+
+    <section class="form-card">
+        <form method="post" novalidate>
+            {{ form.hidden_tag() }}
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="{{ form.theme_name.id }}">{{ form.theme_name.label.text }}</label>
+                    {{ form.theme_name(class_="form-control") }}
+                    {% for error in form.theme_name.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.app_name.id }}">{{ form.app_name.label.text }}</label>
+                    {{ form.app_name(class_="form-control") }}
+                    {% for error in form.app_name.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+                </div>
+
+                <div class="form-group form-group-full">
+                    <label for="{{ form.app_tagline.id }}">{{ form.app_tagline.label.text }}</label>
+                    {{ form.app_tagline(class_="form-control") }}
+                    {% for error in form.app_tagline.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.logo_path.id }}">{{ form.logo_path.label.text }}</label>
+                    {{ form.logo_path(class_="form-control", placeholder="img/default-logo.svg") }}
+                    {% for error in form.logo_path.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.favicon_path.id }}">{{ form.favicon_path.label.text }}</label>
+                    {{ form.favicon_path(class_="form-control", placeholder="img/favicon.ico") }}
+                    {% for error in form.favicon_path.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.primary_color.id }}">{{ form.primary_color.label.text }}</label>
+                    {{ form.primary_color(class_="form-control", placeholder="#1f4b99") }}
+                    {% for error in form.primary_color.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.secondary_color.id }}">{{ form.secondary_color.label.text }}</label>
+                    {{ form.secondary_color(class_="form-control", placeholder="#15356d") }}
+                    {% for error in form.secondary_color.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.accent_color.id }}">{{ form.accent_color.label.text }}</label>
+                    {{ form.accent_color(class_="form-control", placeholder="#eef4ff") }}
+                    {% for error in form.accent_color.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.sidebar_style.id }}">{{ form.sidebar_style.label.text }}</label>
+                    {{ form.sidebar_style(class_="form-control") }}
+                    {% for error in form.sidebar_style.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.navbar_style.id }}">{{ form.navbar_style.label.text }}</label>
+                    {{ form.navbar_style(class_="form-control") }}
+                    {% for error in form.navbar_style.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+                </div>
+
+                <div class="form-group form-group-full">
+                    <label for="{{ form.footer_text.id }}">{{ form.footer_text.label.text }}</label>
+                    {{ form.footer_text(class_="form-control form-control-textarea", rows="4") }}
+                    {% for error in form.footer_text.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+                </div>
+            </div>
+
+            <div class="form-actions-row">
+                {{ form.submit(class_="btn btn-primary") }}
+                <a class="btn btn-secondary" href="{{ url_for('branding.index') }}">Back</a>
+            </div>
+        </form>
+    </section>
+{% endblock %}

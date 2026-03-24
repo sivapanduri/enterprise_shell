@@ -1,0 +1,78 @@
+{% extends "_layouts/app_base.html" %}
+
+{% block title %}Branding Preview | {{ branding.app_name }}{% endblock %}
+
+{% block admin_content %}
+    {% set breadcrumbs = [
+        {"label": "Dashboard", "url": url_for("dashboard.index")},
+        {"label": "Branding", "url": url_for("branding.index")},
+        {"label": "Preview", "url": None}
+    ] %}
+    {% set eyebrow = "Branding" %}
+    {% set title = "Branding Preview" %}
+    {% set subtitle = "Preview the currently resolved branding values used across the shell." %}
+
+    {% include "_partials/page_header.html" %}
+
+    <section class="detail-grid">
+        <article class="info-card">
+            <h3>Identity</h3>
+            <dl class="status-list">
+                <dt>Theme name</dt>
+                <dd>{{ branding_preview.theme_name }}</dd>
+
+                <dt>App name</dt>
+                <dd>{{ branding_preview.app_name }}</dd>
+
+                <dt>Tagline</dt>
+                <dd>{{ branding_preview.app_tagline }}</dd>
+
+                <dt>Logo path</dt>
+                <dd>{{ branding_preview.logo_path }}</dd>
+
+                <dt>Favicon path</dt>
+                <dd>{{ branding_preview.favicon_path or "—" }}</dd>
+            </dl>
+        </article>
+
+        <article class="info-card">
+            <h3>Colors & shell</h3>
+            <dl class="status-list">
+                <dt>Primary</dt>
+                <dd>{{ branding_preview.primary_color }}</dd>
+
+                <dt>Secondary</dt>
+                <dd>{{ branding_preview.secondary_color }}</dd>
+
+                <dt>Accent</dt>
+                <dd>{{ branding_preview.accent_color }}</dd>
+
+                <dt>Sidebar style</dt>
+                <dd>{{ branding_preview.sidebar_style }}</dd>
+
+                <dt>Navbar style</dt>
+                <dd>{{ branding_preview.navbar_style }}</dd>
+            </dl>
+        </article>
+
+        <article class="info-card">
+            <h3>Content surfaces</h3>
+            <dl class="status-list">
+                <dt>Login title</dt>
+                <dd>{{ branding_preview.login_title }}</dd>
+
+                <dt>Login subtitle</dt>
+                <dd>{{ branding_preview.login_subtitle }}</dd>
+
+                <dt>Public hero title</dt>
+                <dd>{{ branding_preview.public_hero_title }}</dd>
+
+                <dt>Public hero subtitle</dt>
+                <dd>{{ branding_preview.public_hero_subtitle }}</dd>
+
+                <dt>Footer text</dt>
+                <dd>{{ branding_preview.footer_text }}</dd>
+            </dl>
+        </article>
+    </section>
+{% endblock %}
