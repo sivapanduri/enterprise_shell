@@ -4,6 +4,7 @@ from app.blueprints.auth import auth_bp
 from app.blueprints.dashboard import dashboard_bp
 from app.blueprints.public import public_bp
 from app.blueprints.roles import roles_bp
+from app.blueprints.settings import settings_bp
 from app.blueprints.users import users_bp
 from app.config import config_by_name
 from app.core.context_processors import register_context_processors
@@ -38,6 +39,7 @@ def register_blueprints(app: Flask) -> None:
     app.register_blueprint(dashboard_bp)
     app.register_blueprint(users_bp)
     app.register_blueprint(roles_bp)
+    app.register_blueprint(settings_bp)
 
 
 def register_commands(app: Flask) -> None:

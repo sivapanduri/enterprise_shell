@@ -1,0 +1,69 @@
+{% extends "_layouts/app_base.html" %}
+
+{% block title %}General Settings | {{ branding.app_name }}{% endblock %}
+
+{% block admin_content %}
+    {% set breadcrumbs = [
+        {"label": "Dashboard", "url": url_for("dashboard.index")},
+        {"label": "Settings", "url": url_for("settings.index")},
+        {"label": "General", "url": None}
+    ] %}
+    {% set eyebrow = "Settings" %}
+    {% set title = "General Settings" %}
+    {% set subtitle = "Update shell identity, support contact, and footer display settings." %}
+
+    {% include "_partials/page_header.html" %}
+
+    <section class="form-card">
+        <form method="post" novalidate>
+            {{ form.hidden_tag() }}
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="{{ form.app_display_name.id }}">{{ form.app_display_name.label.text }}</label>
+                    {{ form.app_display_name(class_="form-control", placeholder="Enterprise Shell") }}
+                    {% for error in form.app_display_name.errors %}
+                        <div class="field-error">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.app_tagline.id }}">{{ form.app_tagline.label.text }}</label>
+                    {{ form.app_tagline(class_="form-control", placeholder="Reusable Flask foundation") }}
+                    {% for error in form.app_tagline.errors %}
+                        <div class="field-error">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.company_name.id }}">{{ form.company_name.label.text }}</label>
+                    {{ form.company_name(class_="form-control", placeholder="Your Organization") }}
+                    {% for error in form.company_name.errors %}
+                        <div class="field-error">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.support_email.id }}">{{ form.support_email.label.text }}</label>
+                    {{ form.support_email(class_="form-control", placeholder="support@example.com") }}
+                    {% for error in form.support_email.errors %}
+                        <div class="field-error">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="form-group form-group-full">
+                    <label for="{{ form.footer_text.id }}">{{ form.footer_text.label.text }}</label>
+                    {{ form.footer_text(class_="form-control form-control-textarea", rows="4", placeholder="Footer text") }}
+                    {% for error in form.footer_text.errors %}
+                        <div class="field-error">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="form-actions-row">
+                {{ form.submit(class_="btn btn-primary") }}
+                <a class="btn btn-secondary" href="{{ url_for('settings.index') }}">Back</a>
+            </div>
+        </form>
+    </section>
+{% endblock %}

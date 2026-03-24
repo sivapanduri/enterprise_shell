@@ -45,7 +45,7 @@ def get_admin_menu() -> list[MenuItem]:
                 MenuItem(
                     key="settings",
                     label="Settings",
-                    endpoint=None,
+                    endpoint="settings.index",
                     icon="settings",
                 ),
             ],

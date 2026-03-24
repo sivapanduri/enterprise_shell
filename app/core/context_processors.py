@@ -2,6 +2,7 @@ from flask import current_app, request, url_for
 from flask_login import current_user
 
 from app.menu import get_admin_menu
+from app.services.settings_service import SettingsService
 
 
 def _item_is_active(item, endpoint: str | None) -> bool:
@@ -20,15 +21,16 @@ def register_context_processors(app) -> None:
     def inject_shell_context():
         current_endpoint = request.endpoint
         admin_menu = get_admin_menu()
+        general_settings = SettingsService.get_general_settings()
 
         return {
             "branding": {
-                "app_name": current_app.config["APP_NAME"],
-                "app_tagline": current_app.config["APP_TAGLINE"],
+                "app_name": general_settings.get("app_display_name") or current_app.config["APP_NAME"],
+                "app_tagline": general_settings.get("app_tagline") or current_app.config["APP_TAGLINE"],
                 "app_logo": current_app.config["APP_LOGO"],
-                "footer_text": current_app.config["APP_FOOTER_TEXT"],
-                "company_name": current_app.config["COMPANY_NAME"],
-                "support_email": current_app.config["SUPPORT_EMAIL"],
+                "footer_text": general_settings.get("footer_text") or current_app.config["APP_FOOTER_TEXT"],
+                "company_name": general_settings.get("company_name") or current_app.config["COMPANY_NAME"],
+                "support_email": general_settings.get("support_email") or current_app.config["SUPPORT_EMAIL"],
                 "theme_primary": current_app.config["THEME_PRIMARY"],
                 "theme_secondary": current_app.config["THEME_SECONDARY"],
                 "theme_accent": current_app.config["THEME_ACCENT"],

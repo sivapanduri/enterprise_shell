@@ -1,0 +1,50 @@
+{% extends "_layouts/app_base.html" %}
+
+{% block title %}Settings | {{ branding.app_name }}{% endblock %}
+
+{% block admin_content %}
+    {% set breadcrumbs = [
+        {"label": "Dashboard", "url": url_for("dashboard.index")},
+        {"label": "Settings", "url": None}
+    ] %}
+    {% set eyebrow = "Administration" %}
+    {% set title = "Settings" %}
+    {% set subtitle = "Manage database-backed application configuration for the shell." %}
+
+    {% include "_partials/page_header.html" %}
+
+    <section class="stats-grid">
+        {% with label="Total settings", value=stats.total_settings, hint="All persisted settings records" %}
+            {% include "_components/stat_card.html" %}
+        {% endwith %}
+        {% with label="General", value=stats.general_settings, hint="Application identity and display settings" %}
+            {% include "_components/stat_card.html" %}
+        {% endwith %}
+        {% with label="Security", value=stats.security_settings, hint="Authentication-related configuration" %}
+            {% include "_components/stat_card.html" %}
+        {% endwith %}
+    </section>
+
+    <section class="dashboard-grid dashboard-grid-2">
+        <article class="info-card">
+            <h3>General settings</h3>
+            <p>
+                Manage display name, tagline, support contact details, and footer text.
+            </p>
+            <div class="stack-actions">
+                <a class="btn btn-primary" href="{{ url_for('settings.general') }}">Open General Settings</a>
+            </div>
+        </article>
+
+        <article class="info-card">
+            <h3>Security settings</h3>
+            <p>
+                Configure password length, session timeout, remember-me behavior,
+                and first-login password change policy.
+            </p>
+            <div class="stack-actions">
+                <a class="btn btn-primary" href="{{ url_for('settings.security') }}">Open Security Settings</a>
+            </div>
+        </article>
+    </section>
+{% endblock %}
