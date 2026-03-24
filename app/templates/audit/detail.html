@@ -1,0 +1,25 @@
+{% extends "_layouts/app_base.html" %}
+
+{% block title %}Audit Detail | {{ branding.app_name }}{% endblock %}
+
+{% block admin_content %}
+<h1>Transaction {{ tx.id }}</h1>
+
+<p><strong>Action:</strong> {{ tx.action }}</p>
+<p><strong>User:</strong> {{ tx.actor.email if tx.actor else "System" }}</p>
+<p><strong>Time:</strong> {{ tx.created_at }}</p>
+
+<hr>
+
+<h3>Entries</h3>
+
+{% for entry in tx.entries %}
+<div class="info-card">
+    <p><strong>Table:</strong> {{ entry.table_name }}</p>
+    <p><strong>Operation:</strong> {{ entry.operation }}</p>
+
+    <pre>Before: {{ entry.before_data }}</pre>
+    <pre>After: {{ entry.after_data }}</pre>
+</div>
+{% endfor %}
+{% endblock %}

@@ -64,7 +64,7 @@ def get_admin_menu() -> list[MenuItem]:
                 MenuItem(
                     key="audit",
                     label="Audit & Restore",
-                    endpoint=None,
+                    endpoint="audit.list_transactions",
                     icon="history",
                 ),
                 MenuItem(
