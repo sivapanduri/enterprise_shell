@@ -1,0 +1,82 @@
+{% extends "_layouts/app_base.html" %}
+
+{% block title %}Role Detail | {{ branding.app_name }}{% endblock %}
+
+{% block admin_content %}
+    {% set breadcrumbs = [
+        {"label": "Dashboard", "url": url_for("dashboard.index")},
+        {"label": "Roles", "url": url_for("roles.list_roles")},
+        {"label": role.label, "url": None}
+    ] %}
+    {% set eyebrow = "Role management" %}
+    {% set title = role.label %}
+    {% set subtitle = "Inspect role metadata, assigned permissions, and attached users." %}
+    {% set actions = '
+        <a class="btn btn-secondary" href="' ~ url_for("roles.edit_role", role_id=role.id) ~ '">Edit</a>
+        <a class="btn btn-secondary" href="' ~ url_for("roles.assign_permissions", role_id=role.id) ~ '">Manage Permissions</a>
+    ' %}
+
+    {% include "_partials/page_header.html" %}
+
+    <section class="detail-grid">
+        <article class="info-card">
+            <h3>Role details</h3>
+            <dl class="status-list">
+                <dt>Label</dt>
+                <dd>{{ role.label }}</dd>
+
+                <dt>System name</dt>
+                <dd>{{ role.name }}</dd>
+
+                <dt>System role</dt>
+                <dd>{{ "Yes" if role.is_system_role else "No" }}</dd>
+
+                <dt>Description</dt>
+                <dd>{{ role.description or "—" }}</dd>
+
+                <dt>Total permissions</dt>
+                <dd>{{ role.permissions|length }}</dd>
+
+                <dt>Total users</dt>
+                <dd>{{ role.users|length }}</dd>
+            </dl>
+        </article>
+
+        <article class="info-card">
+            <h3>Assigned permissions</h3>
+            {% if permission_groups %}
+                <div class="permission-group-stack">
+                    {% for module_name, permissions in permission_groups.items() %}
+                        <div class="permission-group-card">
+                            <div class="permission-group-title">{{ module_name }}</div>
+                            <ul class="permission-bullet-list">
+                                {% for permission in permissions %}
+                                    <li>{{ permission.name }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p>No permissions assigned.</p>
+            {% endif %}
+        </article>
+
+        <article class="info-card">
+            <h3>Users with this role</h3>
+            {% if role.users %}
+                <ul class="feature-list">
+                    {% for user_role in role.users %}
+                        <li>
+                            <a href="{{ url_for('users.detail_user', user_id=user_role.user.id) }}">
+                                {{ user_role.user.display_name }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No users assigned to this role.</p>
+            {% endif %}
+        </article>
+    </section>
+{% endblock %}

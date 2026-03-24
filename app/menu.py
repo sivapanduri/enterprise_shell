@@ -32,8 +32,14 @@ def get_admin_menu() -> list[MenuItem]:
                 ),
                 MenuItem(
                     key="roles",
-                    label="Roles & Permissions",
-                    endpoint=None,
+                    label="Roles",
+                    endpoint="roles.list_roles",
+                    icon="shield",
+                ),
+                MenuItem(
+                    key="permissions",
+                    label="Permissions",
+                    endpoint="roles.permission_catalog",
                     icon="shield",
                 ),
                 MenuItem(

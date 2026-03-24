@@ -1,0 +1,45 @@
+{% extends "_layouts/app_base.html" %}
+
+{% block title %}Permissions | {{ branding.app_name }}{% endblock %}
+
+{% block admin_content %}
+    {% set breadcrumbs = [
+        {"label": "Dashboard", "url": url_for("dashboard.index")},
+        {"label": "Permissions", "url": None}
+    ] %}
+    {% set eyebrow = "Administration" %}
+    {% set title = "Permission Catalog" %}
+    {% set subtitle = "Inspect the shell permission registry grouped by module." %}
+
+    {% include "_partials/page_header.html" %}
+
+    <section class="permission-catalog-grid">
+        {% for module_name, permissions in grouped_permissions.items() %}
+            <article class="info-card">
+                <h3>{{ module_name }}</h3>
+                <div class="table-responsive">
+                    <table class="data-table data-table-compact">
+                        <thead>
+                            <tr>
+                                <th>Permission</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for permission in permissions %}
+                                <tr>
+                                    <td><code>{{ permission.name }}</code></td>
+                                    <td>{{ permission.description or "—" }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </article>
+        {% else %}
+            <article class="info-card">
+                <p>No permissions found.</p>
+            </article>
+        {% endfor %}
+    </section>
+{% endblock %}

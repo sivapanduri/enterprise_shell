@@ -1,0 +1,62 @@
+{% extends "_layouts/app_base.html" %}
+
+{% block title %}Roles | {{ branding.app_name }}{% endblock %}
+
+{% block admin_content %}
+    {% set breadcrumbs = [
+        {"label": "Dashboard", "url": url_for("dashboard.index")},
+        {"label": "Roles", "url": None}
+    ] %}
+    {% set eyebrow = "Administration" %}
+    {% set title = "Roles" %}
+    {% set subtitle = "Manage RBAC roles and their permission scope." %}
+    {% set actions = '<a class="btn btn-primary" href="' ~ url_for("roles.create_role") ~ '">Create Role</a>' %}
+
+    {% include "_partials/page_header.html" %}
+
+    <section class="table-card">
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Label</th>
+                        <th>System Name</th>
+                        <th>System Role</th>
+                        <th>Permissions</th>
+                        <th>Users</th>
+                        <th>Created</th>
+                        <th class="text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for role in roles %}
+                        <tr>
+                            <td>
+                                <a class="table-link" href="{{ url_for('roles.detail_role', role_id=role.id) }}">
+                                    {{ role.label }}
+                                </a>
+                            </td>
+                            <td>{{ role.name }}</td>
+                            <td>{{ "Yes" if role.is_system_role else "No" }}</td>
+                            <td>{{ role.permissions|length }}</td>
+                            <td>{{ role.users|length }}</td>
+                            <td>{{ role.created_at }}</td>
+                            <td class="text-right">
+                                <div class="table-actions">
+                                    <a class="btn btn-secondary btn-small" href="{{ url_for('roles.detail_role', role_id=role.id) }}">View</a>
+                                    <a class="btn btn-secondary btn-small" href="{{ url_for('roles.edit_role', role_id=role.id) }}">Edit</a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="7">
+                                <div class="empty-row">No roles found.</div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+{% endblock %}
