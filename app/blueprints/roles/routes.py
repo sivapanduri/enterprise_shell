@@ -7,6 +7,7 @@ from app.extensions import db
 from app.forms.roles import RoleForm, RolePermissionAssignmentForm
 from app.models.rbac import Permission, Role, RolePermission
 from app.security.decorators import permission_required
+from app.services.audit_service import AuditService
 
 
 @roles_bp.get("/")
@@ -37,7 +38,22 @@ def create_role():
             is_system_role=form.is_system_role.data,
         )
         db.session.add(role)
-        db.session.commit()
+        db.session.flush()
+
+        tx = AuditService.start_transaction(
+            "roles.create",
+            description=f"Created role {role.name}",
+        )
+        AuditService.add_entry(
+            tx,
+            table_name="roles",
+            record_id=role.id,
+            operation="INSERT",
+            before_data=None,
+            after_data=AuditService.snapshot_role(role),
+        )
+
+        AuditService.commit()
 
         flash("Role created successfully.", "success")
         return redirect(url_for("roles.detail_role", role_id=role.id))
@@ -80,12 +96,29 @@ def edit_role(role_id: int):
             flash("Another role already uses that system name.", "danger")
             return render_template("roles/edit.html", form=form, role=role)
 
+        before_data = AuditService.snapshot_role(role)
+
         role.name = name
         role.label = label
         role.description = (form.description.data or "").strip() or None
         role.is_system_role = form.is_system_role.data
 
-        db.session.commit()
+        db.session.flush()
+
+        tx = AuditService.start_transaction(
+            "roles.edit",
+            description=f"Updated role {role.name}",
+        )
+        AuditService.add_entry(
+            tx,
+            table_name="roles",
+            record_id=role.id,
+            operation="UPDATE",
+            before_data=before_data,
+            after_data=AuditService.snapshot_role(role),
+        )
+
+        AuditService.commit()
 
         flash("Role updated successfully.", "success")
         return redirect(url_for("roles.detail_role", role_id=role.id))
@@ -109,6 +142,8 @@ def assign_permissions(role_id: int):
         form.permission_ids.data = [role_permission.permission_id for role_permission in role.permissions]
 
     if form.validate_on_submit():
+        before_data = AuditService.snapshot_role_permissions(role)
+
         selected_permission_ids = set(form.permission_ids.data)
         current_permission_ids = {role_permission.permission_id for role_permission in role.permissions}
 
@@ -124,7 +159,22 @@ def assign_permissions(role_id: int):
                 )
             )
 
-        db.session.commit()
+        db.session.flush()
+
+        tx = AuditService.start_transaction(
+            "roles.assign_permissions",
+            description=f"Updated permissions for role {role.name}",
+        )
+        AuditService.add_entry(
+            tx,
+            table_name="role_permissions",
+            record_id=role.id,
+            operation="UPDATE",
+            before_data=before_data,
+            after_data=AuditService.snapshot_role_permissions(role),
+        )
+
+        AuditService.commit()
         flash("Role permissions updated successfully.", "success")
         return redirect(url_for("roles.detail_role", role_id=role.id))
 

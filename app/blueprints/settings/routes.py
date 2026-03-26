@@ -5,6 +5,7 @@ from app.blueprints.settings import settings_bp
 from app.forms.settings import GeneralSettingsForm, SecuritySettingsForm
 from app.models.settings import AppSetting
 from app.security.decorators import permission_required
+from app.services.audit_service import AuditService
 from app.services.settings_service import SettingsService
 
 
@@ -25,6 +26,8 @@ def general():
     form = GeneralSettingsForm(data=SettingsService.get_general_settings())
 
     if form.validate_on_submit():
+        before_data = SettingsService.get_general_settings()
+
         SettingsService.save_general_settings(
             {
                 "app_display_name": form.app_display_name.data.strip(),
@@ -35,6 +38,21 @@ def general():
             },
             updated_by_id=current_user.id,
         )
+
+        tx = AuditService.start_transaction(
+            "settings.general.edit",
+            description="Updated general settings",
+        )
+        AuditService.add_entry(
+            tx,
+            table_name="app_settings",
+            record_id="general",
+            operation="UPDATE",
+            before_data=before_data,
+            after_data=SettingsService.get_general_settings(),
+        )
+        AuditService.commit()
+
         flash("General settings saved successfully.", "success")
 
     return render_template("settings/general.html", form=form)
@@ -46,6 +64,8 @@ def security():
     form = SecuritySettingsForm(data=SettingsService.get_security_settings())
 
     if form.validate_on_submit():
+        before_data = SettingsService.get_security_settings()
+
         SettingsService.save_security_settings(
             {
                 "password_min_length": form.password_min_length.data,
@@ -55,6 +75,21 @@ def security():
             },
             updated_by_id=current_user.id,
         )
+
+        tx = AuditService.start_transaction(
+            "settings.security.edit",
+            description="Updated security settings",
+        )
+        AuditService.add_entry(
+            tx,
+            table_name="app_settings",
+            record_id="security",
+            operation="UPDATE",
+            before_data=before_data,
+            after_data=SettingsService.get_security_settings(),
+        )
+        AuditService.commit()
+
         flash("Security settings saved successfully.", "success")
 
     return render_template("settings/security.html", form=form)

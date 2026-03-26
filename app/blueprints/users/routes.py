@@ -1,4 +1,4 @@
-from flask import abort, flash, redirect, render_template, request, url_for
+from flask import flash, redirect, render_template, request, url_for
 from flask_login import current_user
 
 from app.blueprints.users import users_bp
@@ -7,6 +7,7 @@ from app.forms.users import UserCreateForm, UserEditForm, UserRoleAssignmentForm
 from app.models.rbac import Role, UserRole
 from app.models.user import User
 from app.security.decorators import permission_required
+from app.services.audit_service import AuditService
 
 
 @users_bp.get("/")
@@ -44,7 +45,22 @@ def create_user():
         user.set_password(form.password.data)
 
         db.session.add(user)
-        db.session.commit()
+        db.session.flush()
+
+        tx = AuditService.start_transaction(
+            "users.create",
+            description=f"Created user {user.email}",
+        )
+        AuditService.add_entry(
+            tx,
+            table_name="users",
+            record_id=user.id,
+            operation="INSERT",
+            before_data=None,
+            after_data=AuditService.snapshot_user(user),
+        )
+
+        AuditService.commit()
 
         flash("User created successfully.", "success")
         return redirect(url_for("users.detail_user", user_id=user.id))
@@ -76,6 +92,8 @@ def edit_user(user_id: int):
             flash("Another user already uses that email or username.", "danger")
             return render_template("users/edit.html", form=form, user=user)
 
+        before_data = AuditService.snapshot_user(user)
+
         user.email = email
         user.username = username
         user.first_name = form.first_name.data.strip() or None
@@ -84,7 +102,22 @@ def edit_user(user_id: int):
         user.is_superadmin = form.is_superadmin.data
         user.must_change_password = form.must_change_password.data
 
-        db.session.commit()
+        db.session.flush()
+
+        tx = AuditService.start_transaction(
+            "users.edit",
+            description=f"Updated user {user.email}",
+        )
+        AuditService.add_entry(
+            tx,
+            table_name="users",
+            record_id=user.id,
+            operation="UPDATE",
+            before_data=before_data,
+            after_data=AuditService.snapshot_user(user),
+        )
+
+        AuditService.commit()
 
         flash("User updated successfully.", "success")
         return redirect(url_for("users.detail_user", user_id=user.id))
@@ -105,6 +138,8 @@ def assign_roles(user_id: int):
         form.role_ids.data = [user_role.role_id for user_role in user.roles]
 
     if form.validate_on_submit():
+        before_data = AuditService.snapshot_user_roles(user)
+
         selected_role_ids = set(form.role_ids.data)
         current_role_ids = {user_role.role_id for user_role in user.roles}
 
@@ -121,7 +156,22 @@ def assign_roles(user_id: int):
                 )
             )
 
-        db.session.commit()
+        db.session.flush()
+
+        tx = AuditService.start_transaction(
+            "users.assign_roles",
+            description=f"Updated role assignments for {user.email}",
+        )
+        AuditService.add_entry(
+            tx,
+            table_name="user_roles",
+            record_id=user.id,
+            operation="UPDATE",
+            before_data=before_data,
+            after_data=AuditService.snapshot_user_roles(user),
+        )
+
+        AuditService.commit()
         flash("User roles updated successfully.", "success")
         return redirect(url_for("users.detail_user", user_id=user.id))
 
@@ -137,8 +187,25 @@ def toggle_active(user_id: int):
         flash("You cannot deactivate your own account from this screen.", "danger")
         return redirect(url_for("users.detail_user", user_id=user.id))
 
+    before_data = AuditService.snapshot_user(user)
+
     user.is_active = not user.is_active
-    db.session.commit()
+    db.session.flush()
+
+    tx = AuditService.start_transaction(
+        "users.toggle_active",
+        description=f"Toggled active state for {user.email}",
+    )
+    AuditService.add_entry(
+        tx,
+        table_name="users",
+        record_id=user.id,
+        operation="UPDATE",
+        before_data=before_data,
+        after_data=AuditService.snapshot_user(user),
+    )
+
+    AuditService.commit()
 
     state_label = "activated" if user.is_active else "deactivated"
     flash(f"User {state_label} successfully.", "success")

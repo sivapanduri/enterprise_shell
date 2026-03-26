@@ -5,6 +5,7 @@ from app.blueprints.branding import branding_bp
 from app.forms.branding import LoginBrandingForm, PublicBrandingForm, ThemeBrandingForm
 from app.models.branding import BrandingTheme
 from app.security.decorators import permission_required
+from app.services.audit_service import AuditService
 from app.services.branding_service import BrandingService
 
 
@@ -27,6 +28,8 @@ def theme():
     form = ThemeBrandingForm(obj=theme)
 
     if form.validate_on_submit():
+        before_data = BrandingService.get_effective_branding()
+
         BrandingService.save_theme_settings(
             {
                 "theme_name": form.theme_name.data.strip(),
@@ -43,6 +46,21 @@ def theme():
             },
             updated_by_id=current_user.id,
         )
+
+        tx = AuditService.start_transaction(
+            "branding.theme.edit",
+            description="Updated theme branding",
+        )
+        AuditService.add_entry(
+            tx,
+            table_name="branding_themes",
+            record_id=theme.id,
+            operation="UPDATE",
+            before_data=before_data,
+            after_data=BrandingService.get_effective_branding(),
+        )
+        AuditService.commit()
+
         flash("Theme settings saved successfully.", "success")
 
     return render_template("branding/theme.html", form=form)
@@ -55,6 +73,11 @@ def login_page():
     form = LoginBrandingForm(obj=theme)
 
     if form.validate_on_submit():
+        before_data = {
+            "login_title": theme.login_title,
+            "login_subtitle": theme.login_subtitle,
+        }
+
         BrandingService.save_login_branding(
             {
                 "login_title": form.login_title.data.strip(),
@@ -62,6 +85,24 @@ def login_page():
             },
             updated_by_id=current_user.id,
         )
+
+        tx = AuditService.start_transaction(
+            "branding.login.edit",
+            description="Updated login branding",
+        )
+        AuditService.add_entry(
+            tx,
+            table_name="branding_themes",
+            record_id=theme.id,
+            operation="UPDATE",
+            before_data=before_data,
+            after_data={
+                "login_title": theme.login_title,
+                "login_subtitle": theme.login_subtitle,
+            },
+        )
+        AuditService.commit()
+
         flash("Login branding saved successfully.", "success")
 
     return render_template("branding/login.html", form=form)
@@ -74,6 +115,11 @@ def public_site():
     form = PublicBrandingForm(obj=theme)
 
     if form.validate_on_submit():
+        before_data = {
+            "public_hero_title": theme.public_hero_title,
+            "public_hero_subtitle": theme.public_hero_subtitle,
+        }
+
         BrandingService.save_public_branding(
             {
                 "public_hero_title": form.public_hero_title.data.strip(),
@@ -81,6 +127,24 @@ def public_site():
             },
             updated_by_id=current_user.id,
         )
+
+        tx = AuditService.start_transaction(
+            "branding.public.edit",
+            description="Updated public branding",
+        )
+        AuditService.add_entry(
+            tx,
+            table_name="branding_themes",
+            record_id=theme.id,
+            operation="UPDATE",
+            before_data=before_data,
+            after_data={
+                "public_hero_title": theme.public_hero_title,
+                "public_hero_subtitle": theme.public_hero_subtitle,
+            },
+        )
+        AuditService.commit()
+
         flash("Public branding saved successfully.", "success")
 
     return render_template("branding/public.html", form=form)
