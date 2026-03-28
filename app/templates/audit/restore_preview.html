@@ -1,0 +1,132 @@
+{% extends "_layouts/app_base.html" %}
+
+{% block title %}Restore Preview | {{ branding.app_name }}{% endblock %}
+
+{% block admin_content %}
+    {% set breadcrumbs = [
+        {"label": "Dashboard", "url": url_for("dashboard.index")},
+        {"label": "Audit", "url": url_for("audit.list_transactions")},
+        {"label": "Transaction #" ~ tx.id, "url": url_for("audit.transaction_detail", tx_id=tx.id)},
+        {"label": "Restore Preview", "url": None}
+    ] %}
+    {% set eyebrow = "Restore" %}
+    {% set title = "Restore Preview for Transaction #" ~ tx.id %}
+    {% set subtitle = "Review reverse actions and conflict checks before executing restoration." %}
+    {% set actions = '
+        <a class="btn btn-secondary" href="' ~ url_for("audit.transaction_detail", tx_id=tx.id) ~ '">Back to Transaction</a>
+    ' %}
+
+    {% include "_partials/page_header.html" %}
+
+    <section class="detail-grid">
+        <article class="info-card">
+            <h3>Transaction Context</h3>
+            <dl class="status-list">
+                <dt>ID</dt>
+                <dd>#{{ tx.id }}</dd>
+
+                <dt>Action</dt>
+                <dd><code>{{ tx.action }}</code></dd>
+
+                <dt>Description</dt>
+                <dd>{{ tx.description or "—" }}</dd>
+
+                <dt>Actor</dt>
+                <dd>{{ tx.actor.email if tx.actor else "System" }}</dd>
+
+                <dt>Created</dt>
+                <dd>{{ tx.created_at }}</dd>
+            </dl>
+        </article>
+
+        <article class="info-card">
+            <h3>Execution Rules</h3>
+
+            {% if has_conflicts %}
+                <div class="alert alert-danger">
+                    Conflicts were detected. Restore execution is blocked until conflicts are resolved.
+                </div>
+            {% else %}
+                <div class="alert alert-success">
+                    No conflicts detected. This restore is eligible for execution.
+                </div>
+            {% endif %}
+
+            <ul class="feature-list">
+                <li>Entries are processed in reverse order</li>
+                <li>Execution requires POST + CSRF</li>
+                <li>Only super-admin can execute restore</li>
+                <li>Execution outcome is logged</li>
+            </ul>
+
+            {% if current_user.is_superadmin and not has_conflicts %}
+                <form method="post" action="{{ url_for('audit_restore.execute', tx_id=tx.id) }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button type="submit" class="btn btn-danger">
+                        Execute Restore
+                    </button>
+                </form>
+            {% elif not current_user.is_superadmin %}
+                <div class="alert alert-warning">
+                    You can preview this restore, but only a super-admin can execute it.
+                </div>
+            {% endif %}
+        </article>
+    </section>
+
+    <section class="table-card">
+        <div class="section-heading-row">
+            <h2 class="section-title">Reverse Execution Plan</h2>
+            <div class="section-subtitle">{{ preview|length }} step(s)</div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Table</th>
+                        <th>Record ID</th>
+                        <th>Original Operation</th>
+                        <th>Reverse Action</th>
+                        <th>Conflict</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in preview %}
+                        <tr>
+                            <td>{{ item.table }}</td>
+                            <td>{{ item.record_id or "—" }}</td>
+                            <td>{{ item.original_operation }}</td>
+                            <td>
+                                <span class="status-chip
+                                    {% if item.reverse_action == 'DELETE' %}
+                                        status-chip-danger
+                                    {% elif item.reverse_action in ['INSERT', 'REVERT'] %}
+                                        status-chip-success
+                                    {% else %}
+                                        status-chip-muted
+                                    {% endif %}
+                                ">
+                                    {{ item.reverse_action }}
+                                </span>
+                            </td>
+                            <td>
+                                {% if item.conflict %}
+                                    <span class="status-chip status-chip-danger">Conflict</span>
+                                {% else %}
+                                    <span class="status-chip status-chip-success">OK</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="5">
+                                <div class="empty-row">No restore steps generated.</div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+{% endblock %}

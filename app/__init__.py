@@ -15,6 +15,7 @@ from app.extensions import init_extensions
 from app.logging_config import configure_logging
 from app.permissions import PERMISSIONS
 from app.blueprints.audit import audit_bp
+from app.blueprints.audit_restore import audit_restore_bp
 
 
 def create_app(config_name: str = "development") -> Flask:
@@ -44,6 +45,7 @@ def register_blueprints(app: Flask) -> None:
     app.register_blueprint(settings_bp)
     app.register_blueprint(branding_bp)
     app.register_blueprint(audit_bp)
+    app.register_blueprint(audit_restore_bp)
 
 
 def register_commands(app: Flask) -> None:

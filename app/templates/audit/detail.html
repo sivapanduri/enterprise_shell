@@ -3,23 +3,154 @@
 {% block title %}Audit Detail | {{ branding.app_name }}{% endblock %}
 
 {% block admin_content %}
-<h1>Transaction {{ tx.id }}</h1>
+    {% set breadcrumbs = [
+        {"label": "Dashboard", "url": url_for("dashboard.index")},
+        {"label": "Audit", "url": url_for("audit.list_transactions")},
+        {"label": "Transaction #" ~ tx.id, "url": None}
+    ] %}
+    {% set eyebrow = "Audit" %}
+    {% set title = "Transaction #" ~ tx.id %}
+    {% set subtitle = "Inspect grouped row-level changes, before/after snapshots, and restore options for this transaction." %}
+    {% set actions = '
+        <a class="btn btn-secondary" href="' ~ url_for("audit.list_transactions") ~ '">Back to Audit List</a>
+        <a class="btn btn-primary" href="' ~ url_for("audit_restore.preview", tx_id=tx.id) ~ '">Open Restore Preview</a>
+    ' %}
 
-<p><strong>Action:</strong> {{ tx.action }}</p>
-<p><strong>User:</strong> {{ tx.actor.email if tx.actor else "System" }}</p>
-<p><strong>Time:</strong> {{ tx.created_at }}</p>
+    {% include "_partials/page_header.html" %}
 
-<hr>
+    <section class="detail-grid">
+        <article class="info-card">
+            <h3>Transaction Summary</h3>
+            <dl class="status-list">
+                <dt>ID</dt>
+                <dd>#{{ tx.id }}</dd>
 
-<h3>Entries</h3>
+                <dt>Action</dt>
+                <dd><code>{{ tx.action }}</code></dd>
 
-{% for entry in tx.entries %}
-<div class="info-card">
-    <p><strong>Table:</strong> {{ entry.table_name }}</p>
-    <p><strong>Operation:</strong> {{ entry.operation }}</p>
+                <dt>Description</dt>
+                <dd>{{ tx.description or "—" }}</dd>
 
-    <pre>Before: {{ entry.before_data }}</pre>
-    <pre>After: {{ entry.after_data }}</pre>
-</div>
-{% endfor %}
+                <dt>Actor</dt>
+                <dd>{{ tx.actor.email if tx.actor else "System" }}</dd>
+
+                <dt>IP Address</dt>
+                <dd>{{ tx.ip_address or "—" }}</dd>
+
+                <dt>User Agent</dt>
+                <dd class="break-text">{{ tx.user_agent or "—" }}</dd>
+
+                <dt>Created</dt>
+                <dd>{{ tx.created_at }}</dd>
+
+                <dt>Entries</dt>
+                <dd>{{ tx.entries|length }}</dd>
+            </dl>
+        </article>
+
+        <article class="info-card">
+            <h3>Restore Guidance</h3>
+            <p>
+                Restoration should always begin with a preview. The preview page shows
+                reverse actions and conflict checks before any execution is allowed.
+            </p>
+            <ul class="feature-list">
+                <li>Preview first</li>
+                <li>Check for conflicts</li>
+                <li>Only super-admin can execute</li>
+                <li>Restore execution must use POST with CSRF protection</li>
+            </ul>
+            <div class="stack-actions">
+                <a class="btn btn-primary" href="{{ url_for('audit_restore.preview', tx_id=tx.id) }}">
+                    Go to Restore Preview
+                </a>
+            </div>
+        </article>
+    </section>
+
+    <section class="entry-stack">
+        <div class="section-heading-row">
+            <h2 class="section-title">Entries</h2>
+            <div class="section-subtitle">{{ tx.entries|length }} row-level change(s)</div>
+        </div>
+
+        {% for item in entry_summaries %}
+            {% set entry = item.entry %}
+            <article class="info-card audit-entry-card">
+                <div class="audit-entry-header">
+                    <div>
+                        <div class="audit-entry-title">
+                            <span class="status-chip status-chip-muted">{{ entry.table_name }}</span>
+                            <span class="status-chip
+                                {% if entry.operation == 'INSERT' %}
+                                    status-chip-success
+                                {% elif entry.operation == 'UPDATE' %}
+                                    status-chip-warning
+                                {% elif entry.operation == 'DELETE' %}
+                                    status-chip-danger
+                                {% else %}
+                                    status-chip-muted
+                                {% endif %}
+                            ">
+                                {{ entry.operation }}
+                            </span>
+                        </div>
+                        <div class="audit-entry-meta">
+                            Record ID: {{ entry.record_id or "—" }}
+                        </div>
+                    </div>
+                </div>
+
+                {% if item.changed_keys %}
+                    <div class="audit-diff-grid">
+                        <div class="audit-diff-panel">
+                            <h4>Before</h4>
+                            <div class="audit-json-box">
+                                {% if entry.before_data %}
+                                    <table class="kv-table">
+                                        <tbody>
+                                            {% for key in item.changed_keys %}
+                                                <tr>
+                                                    <th>{{ key }}</th>
+                                                    <td>{{ entry.before_data.get(key, "—") if entry.before_data else "—" }}</td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                {% else %}
+                                    <div class="empty-state-inline">No previous state</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="audit-diff-panel">
+                            <h4>After</h4>
+                            <div class="audit-json-box">
+                                {% if entry.after_data %}
+                                    <table class="kv-table">
+                                        <tbody>
+                                            {% for key in item.changed_keys %}
+                                                <tr>
+                                                    <th>{{ key }}</th>
+                                                    <td>{{ entry.after_data.get(key, "—") if entry.after_data else "—" }}</td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                {% else %}
+                                    <div class="empty-state-inline">No resulting state</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="empty-state-inline">No structured diff data available for this entry.</div>
+                {% endif %}
+            </article>
+        {% else %}
+            <article class="info-card">
+                <div class="empty-state-inline">This transaction has no entries.</div>
+            </article>
+        {% endfor %}
+    </section>
 {% endblock %}

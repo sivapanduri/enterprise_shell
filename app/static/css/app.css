@@ -1002,3 +1002,147 @@ a:hover {
     border-radius: 999px;
     border: 1px solid rgba(0, 0, 0, 0.08);
 }
+.entry-stack {
+    display: grid;
+    gap: 1rem;
+    margin-top: 1.25rem;
+}
+
+.section-heading-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.75rem;
+}
+
+.section-title {
+    margin: 0;
+    font-size: 1.4rem;
+}
+
+.section-subtitle {
+    color: var(--color-muted);
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+.audit-entry-card {
+    display: grid;
+    gap: 1rem;
+}
+
+.audit-entry-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.audit-entry-title {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.audit-entry-meta {
+    margin-top: 0.5rem;
+    color: var(--color-muted);
+    font-size: 0.92rem;
+}
+
+.audit-diff-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.audit-diff-panel h4 {
+    margin-top: 0;
+    margin-bottom: 0.6rem;
+}
+
+.audit-json-box {
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    background: #f8fafc;
+    padding: 0.85rem;
+    overflow-x: auto;
+}
+
+.kv-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.kv-table th,
+.kv-table td {
+    padding: 0.55rem 0.65rem;
+    border-bottom: 1px solid var(--color-border);
+    text-align: left;
+    vertical-align: top;
+}
+
+.kv-table th {
+    width: 220px;
+    color: var(--color-muted);
+    font-weight: 700;
+}
+
+.empty-state-inline {
+    color: var(--color-muted);
+    font-size: 0.95rem;
+}
+
+.break-text {
+    word-break: break-word;
+}
+
+.alert {
+    border-radius: 12px;
+    padding: 0.85rem 1rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.alert-success {
+    background: #e8f7ee;
+    color: #166534;
+    border: 1px solid #b7e4c7;
+}
+
+.alert-danger {
+    background: #fef2f2;
+    color: #b42318;
+    border: 1px solid #fecaca;
+}
+
+.alert-warning {
+    background: #fff7ed;
+    color: #b45309;
+    border: 1px solid #fed7aa;
+}
+
+.status-chip-warning {
+    background: #fff7ed;
+    color: #b45309;
+}
+
+.status-chip-danger {
+    background: #fef2f2;
+    color: #b42318;
+}
+
+.btn-danger {
+    background: #b42318;
+    color: #fff;
+    border: 1px solid transparent;
+}
+
+@media (max-width: 1100px) {
+    .audit-diff-grid {
+        grid-template-columns: 1fr;
+    }
+}

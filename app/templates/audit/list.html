@@ -3,32 +3,59 @@
 {% block title %}Audit | {{ branding.app_name }}{% endblock %}
 
 {% block admin_content %}
-<h1>Audit Transactions</h1>
+    {% set breadcrumbs = [
+        {"label": "Dashboard", "url": url_for("dashboard.index")},
+        {"label": "Audit", "url": None}
+    ] %}
+    {% set eyebrow = "System" %}
+    {% set title = "Audit Transactions" %}
+    {% set subtitle = "Review grouped change history across the shell. Each transaction can contain one or more row-level entries." %}
 
-<table class="data-table">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Action</th>
-            <th>User</th>
-            <th>Time</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for tx in transactions %}
-        <tr>
-            <td>{{ tx.id }}</td>
-            <td>{{ tx.action }}</td>
-            <td>{{ tx.actor.email if tx.actor else "System" }}</td>
-            <td>{{ tx.created_at }}</td>
-            <td>
-                <a href="{{ url_for('audit.transaction_detail', tx_id=tx.id) }}">
-                    View
-                </a>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+    {% include "_partials/page_header.html" %}
+
+    <section class="table-card">
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Action</th>
+                        <th>Description</th>
+                        <th>Actor</th>
+                        <th>Entries</th>
+                        <th>Created</th>
+                        <th class="text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for tx in transactions %}
+                        <tr>
+                            <td>#{{ tx.id }}</td>
+                            <td><code>{{ tx.action }}</code></td>
+                            <td>{{ tx.description or "—" }}</td>
+                            <td>{{ tx.actor.email if tx.actor else "System" }}</td>
+                            <td>{{ tx.entries|length }}</td>
+                            <td>{{ tx.created_at }}</td>
+                            <td class="text-right">
+                                <div class="table-actions">
+                                    <a class="btn btn-secondary btn-small" href="{{ url_for('audit.transaction_detail', tx_id=tx.id) }}">
+                                        View
+                                    </a>
+                                    <a class="btn btn-secondary btn-small" href="{{ url_for('audit_restore.preview', tx_id=tx.id) }}">
+                                        Restore Preview
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="7">
+                                <div class="empty-row">No audit transactions found.</div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
 {% endblock %}

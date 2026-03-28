@@ -18,6 +18,24 @@ def list_transactions():
 
 @audit_bp.get("/<int:tx_id>")
 @permission_required("audit.view")
-def transaction_detail(tx_id):
+def transaction_detail(tx_id: int):
     tx = AuditTransaction.query.get_or_404(tx_id)
-    return render_template("audit/detail.html", tx=tx)
+
+    entry_summaries = []
+    for entry in tx.entries:
+        before_keys = sorted(entry.before_data.keys()) if isinstance(entry.before_data, dict) else []
+        after_keys = sorted(entry.after_data.keys()) if isinstance(entry.after_data, dict) else []
+
+        changed_keys = sorted(set(before_keys) | set(after_keys))
+        entry_summaries.append(
+            {
+                "entry": entry,
+                "changed_keys": changed_keys,
+            }
+        )
+
+    return render_template(
+        "audit/detail.html",
+        tx=tx,
+        entry_summaries=entry_summaries,
+    )
