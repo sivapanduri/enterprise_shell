@@ -3,62 +3,145 @@
 {% block title %}Home | {{ branding.app_name }}{% endblock %}
 
 {% block content %}
-<section class="hero">
+<section class="hero hero--landing">
     <div class="hero-copy">
-        <span class="eyebrow">Production-ready Flask enterprise shell</span>
-        <h1>{{ branding.public_hero_title }}</h1>
+        <span class="eyebrow">Enterprise Identity & Access Platform</span>
+
+        <h1>
+            {{ branding.public_hero_title or "Secure administration for users, access, and operational control" }}
+        </h1>
+
         <p class="hero-lead">
-            {{ branding.public_hero_subtitle }}
+            {{ branding.public_hero_subtitle or "A centralized platform for managing authentication, user administration, roles, permissions, audit visibility, and core platform controls across enterprise systems." }}
         </p>
 
         <div class="hero-actions">
             {% if current_user.is_authenticated %}
-                <a class="btn btn-primary" href="{{ url_for('dashboard.index') }}">Go to Dashboard</a>
+                <a class="btn btn-primary" href="{{ url_for('dashboard.index') }}">Open Console</a>
             {% else %}
-                <a class="btn btn-primary" href="{{ url_for('auth.login') }}">Login</a>
+                <a class="btn btn-primary" href="{{ url_for('auth.login') }}">Sign In</a>
             {% endif %}
-            <a class="btn btn-secondary" href="{{ url_for('public.about') }}">Explore Architecture</a>
-            <a class="btn btn-secondary" href="{{ url_for('public.status') }}">View Status</a>
+            <a class="btn btn-secondary" href="{{ url_for('public.about') }}">Platform Overview</a>
+            <a class="btn btn-secondary" href="{{ url_for('public.status') }}">System Status</a>
+        </div>
+
+        <div class="hero-trust">
+            <span>Role-based access control</span>
+            <span>Centralized administration</span>
+            <span>Audit-ready operations</span>
         </div>
     </div>
 
     <div class="hero-panel">
-        <div class="info-card">
-            <h2>Stage 8 branding layer</h2>
-            <ul class="feature-list">
-                <li>Database-backed brand theme</li>
-                <li>Theme colors resolved centrally</li>
-                <li>Login content is configurable</li>
-                <li>Public landing messaging is configurable</li>
-                <li>Shell is now easier to reuse per product</li>
-            </ul>
+        <div class="info-card info-card--highlight">
+            <span class="card-kicker">Platform Capabilities</span>
+            <h2>Built for controlled access and administrative clarity</h2>
+            <p>
+                Manage identities, permissions, security settings, and operational oversight
+                from a single platform designed for maintainability and long-term business use.
+            </p>
+
+            <div class="metric-list">
+                <div class="metric-item">
+                    <strong>Users</strong>
+                    <span>Centralized identity administration</span>
+                </div>
+                <div class="metric-item">
+                    <strong>Roles & Permissions</strong>
+                    <span>Structured access governance</span>
+                </div>
+                <div class="metric-item">
+                    <strong>Audit & Recovery</strong>
+                    <span>Operational visibility and control</span>
+                </div>
+            </div>
         </div>
     </div>
 </section>
 
 <section class="section-grid">
     <article class="info-card">
-        <h3>General-purpose shell</h3>
+        <span class="card-kicker">Identity Administration</span>
+        <h3>User and access lifecycle management</h3>
         <p>
-            This shell is intentionally domain-agnostic so future systems can add
-            their own modules without polluting the core foundation.
+            Maintain user accounts, access assignments, and administrative control points
+            through a consistent, server-rendered workflow.
         </p>
     </article>
 
     <article class="info-card">
-        <h3>Low JavaScript approach</h3>
+        <span class="card-kicker">Security Controls</span>
+        <h3>Role-based access with clear governance</h3>
         <p>
-            The UI is built primarily for server-rendered workflows using Flask and Jinja,
-            keeping the frontend easier to maintain over the long term.
+            Define roles, permissions, and access boundaries in a way that supports
+            accountability, clarity, and controlled growth of the platform.
         </p>
     </article>
 
     <article class="info-card">
-        <h3>Enterprise direction</h3>
+        <span class="card-kicker">Operational Oversight</span>
+        <h3>Audit visibility for critical administrative activity</h3>
         <p>
-            The structure is prepared for authentication, RBAC (Role-Based Access Control),
-            settings, branding, audit, restoration, and future business modules.
+            Provide traceability for platform actions and support operational confidence
+            through structured audit and system-level oversight.
         </p>
     </article>
+</section>
+
+<section class="section section--alt">
+    <div class="section-heading">
+        <span class="eyebrow">Why this platform</span>
+        <h2>A practical foundation for internal enterprise systems</h2>
+        <p>
+            Designed for organizations that need a reliable administrative surface without
+            unnecessary frontend complexity.
+        </p>
+    </div>
+
+    <div class="section-grid">
+        <article class="info-card">
+            <h3>Low-friction operations</h3>
+            <p>
+                Server-rendered workflows keep the platform easier to maintain, more predictable
+                to extend, and simpler to operate over time.
+            </p>
+        </article>
+
+        <article class="info-card">
+            <h3>Reusable across products</h3>
+            <p>
+                The shell supports future domain modules while preserving a clean core for
+                authentication, administration, and governance.
+            </p>
+        </article>
+
+        <article class="info-card">
+            <h3>Enterprise-ready structure</h3>
+            <p>
+                Prepared for identity management, settings, branding, audit, restoration,
+                and broader business applications built on a shared platform base.
+            </p>
+        </article>
+    </div>
+</section>
+
+<section class="cta-band">
+    <div class="cta-band__content">
+        <div>
+            <span class="eyebrow">Administrative Access</span>
+            <h2>Operate with control, consistency, and visibility</h2>
+            <p>
+                Enter the platform to manage users, permissions, settings, and oversight workflows.
+            </p>
+        </div>
+
+        <div class="hero-actions">
+            {% if current_user.is_authenticated %}
+                <a class="btn btn-primary" href="{{ url_for('dashboard.index') }}">Go to Dashboard</a>
+            {% else %}
+                <a class="btn btn-primary" href="{{ url_for('auth.login') }}">Access Console</a>
+            {% endif %}
+        </div>
+    </div>
 </section>
 {% endblock %}

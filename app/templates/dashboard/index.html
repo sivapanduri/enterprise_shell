@@ -3,54 +3,71 @@
 {% block title %}Dashboard | {{ branding.app_name }}{% endblock %}
 
 {% block admin_content %}
+
     {% set breadcrumbs = [
         {"label": "Dashboard", "url": None}
     ] %}
-    {% set eyebrow = "Admin shell" %}
+    {% set eyebrow = "Overview" %}
     {% set title = "Dashboard" %}
-    {% set subtitle = "The shell now uses permission-based access control as the foundation for future enterprise modules." %}
+    {% set subtitle = "Manage users, roles, permissions, and system controls." %}
     {% set actions = '
-        <a class="btn btn-secondary" href="' ~ url_for("public.home") ~ '">View Public Site</a>
+        <a class="btn btn-secondary" href="' ~ url_for("public.home") ~ '">Public Site</a>
     ' %}
 
     {% include "_partials/page_header.html" %}
 
+    <!-- ===== Stats ===== -->
     <section class="stats-grid">
-        {% with label="Total users", value=stats.total_users, hint="All accounts in the shell" %}
+
+        {% with label="Users", value=stats.total_users, hint="Total accounts" %}
             {% include "_components/stat_card.html" %}
         {% endwith %}
 
-        {% with label="Active users", value=stats.active_users, hint="Accounts currently enabled" %}
+        {% with label="Active", value=stats.active_users, hint="Enabled accounts" %}
             {% include "_components/stat_card.html" %}
         {% endwith %}
 
-        {% with label="Roles", value=stats.total_roles, hint="RBAC roles now stored in database" %}
+        {% with label="Roles", value=stats.total_roles, hint="Access roles" %}
             {% include "_components/stat_card.html" %}
         {% endwith %}
 
-        {% with label="Permissions", value=stats.total_permissions, hint="System permissions seeded from registry" %}
+        {% with label="Permissions", value=stats.total_permissions, hint="System permissions" %}
             {% include "_components/stat_card.html" %}
         {% endwith %}
+
     </section>
 
+    <!-- ===== Quick Actions ===== -->
+    <section class="dashboard-actions">
+
+    <a href="{{ url_for('users.list_users') }}" class="action-card">
+        <h3>Users</h3>
+        <p>Manage user accounts</p>
+    </a>
+
+    <a href="{{ url_for('roles.list_roles') }}" class="action-card">
+        <h3>Roles</h3>
+        <p>Configure access roles</p>
+    </a>
+
+    <a href="{{ url_for('roles.permission_catalog') }}" class="action-card">
+        <h3>Permissions</h3>
+        <p>Control system permissions</p>
+    </a>
+
+    <a href="{{ url_for('settings.index') }}" class="action-card">
+        <h3>Settings</h3>
+        <p>Platform configuration</p>
+    </a>
+
+</section>
+
+    <!-- ===== Lower Grid ===== -->
     <section class="dashboard-grid dashboard-grid-2">
-        <article class="info-card">
-            <h3>RBAC foundation is active</h3>
-            <p>
-                The shell now uses database-backed roles and permissions instead of relying
-                only on authentication state. This creates the foundation for user management,
-                role assignment, settings access, audit visibility, and future module control.
-            </p>
-            <ul class="feature-list">
-                <li>Permissions are centrally registered</li>
-                <li>Roles and permissions are stored in database tables</li>
-                <li>Route protection now supports permission checks</li>
-                <li>Super-admin remains a controlled bypass</li>
-            </ul>
-        </article>
 
         <article class="info-card">
-            <h3>Current account access</h3>
+            <h3>Account</h3>
+
             <dl class="status-list">
                 <dt>Name</dt>
                 <dd>{{ current_user.display_name }}</dd>
@@ -58,18 +75,27 @@
                 <dt>Email</dt>
                 <dd>{{ current_user.email }}</dd>
 
-                <dt>Super admin</dt>
-                <dd>{{ "Yes" if current_user.is_superadmin else "No" }}</dd>
+                <dt>Access</dt>
+                <dd>{{ "Super Admin" if current_user.is_superadmin else "Standard" }}</dd>
 
                 <dt>Roles</dt>
                 <dd>
                     {% set role_names = current_user.get_role_names() %}
-                    {{ role_names|join(", ") if role_names else "None assigned" }}
+                    {{ role_names|join(", ") if role_names else "None" }}
                 </dd>
-
-                <dt>Permissions</dt>
-                <dd>{{ current_user.get_permission_names()|length }}</dd>
             </dl>
         </article>
+
+        <article class="info-card">
+            <h3>System</h3>
+
+            <ul class="simple-list">
+                <li>Role-based access control active</li>
+                <li>Permissions enforced at route level</li>
+                <li>Audit and restore available</li>
+            </ul>
+        </article>
+
     </section>
+
 {% endblock %}

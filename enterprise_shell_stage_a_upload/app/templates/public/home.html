@@ -1,0 +1,64 @@
+{% extends "_layouts/public_base.html" %}
+
+{% block title %}Home | {{ branding.app_name }}{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="hero-copy">
+        <span class="eyebrow">Production-ready Flask enterprise shell</span>
+        <h1>{{ branding.public_hero_title }}</h1>
+        <p class="hero-lead">
+            {{ branding.public_hero_subtitle }}
+        </p>
+
+        <div class="hero-actions">
+            {% if current_user.is_authenticated %}
+                <a class="btn btn-primary" href="{{ url_for('dashboard.index') }}">Go to Dashboard</a>
+            {% else %}
+                <a class="btn btn-primary" href="{{ url_for('auth.login') }}">Login</a>
+            {% endif %}
+            <a class="btn btn-secondary" href="{{ url_for('public.about') }}">Explore Architecture</a>
+            <a class="btn btn-secondary" href="{{ url_for('public.status') }}">View Status</a>
+        </div>
+    </div>
+
+    <div class="hero-panel">
+        <div class="info-card">
+            <h2>Stage 8 branding layer</h2>
+            <ul class="feature-list">
+                <li>Database-backed brand theme</li>
+                <li>Theme colors resolved centrally</li>
+                <li>Login content is configurable</li>
+                <li>Public landing messaging is configurable</li>
+                <li>Shell is now easier to reuse per product</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<section class="section-grid">
+    <article class="info-card">
+        <h3>General-purpose shell</h3>
+        <p>
+            This shell is intentionally domain-agnostic so future systems can add
+            their own modules without polluting the core foundation.
+        </p>
+    </article>
+
+    <article class="info-card">
+        <h3>Low JavaScript approach</h3>
+        <p>
+            The UI is built primarily for server-rendered workflows using Flask and Jinja,
+            keeping the frontend easier to maintain over the long term.
+        </p>
+    </article>
+
+    <article class="info-card">
+        <h3>Enterprise direction</h3>
+        <p>
+            The structure is prepared for authentication, RBAC (Role-Based Access Control),
+            settings, branding, audit, restoration, and future business modules.
+        </p>
+    </article>
+</section>
+{% endblock %}

@@ -2,9 +2,9 @@
     <div class="sidebar-brand">
         <a class="sidebar-brand-link" href="{{ shell_links.dashboard }}">
             <img
-                src="{{ url_for('static', filename=branding.app_logo) }}"
-                alt="{{ branding.app_name }} logo"
-                class="sidebar-brand-logo"
+                    src="{{ url_for('static', filename=branding.logo_path) }}"
+                    alt="{{ branding.app_name }} logo"
+                    class="sidebar-brand-logo"
             >
             <div class="sidebar-brand-copy">
                 <span class="sidebar-brand-title">{{ branding.app_name }}</span>
@@ -16,35 +16,48 @@
     <nav class="sidebar-nav">
         {% for item in admin_menu %}
             {% set active = is_menu_item_active(item) %}
-            <div class="sidebar-group {% if active %}is-active{% endif %}">
-                {% if item.endpoint %}
-                    <a
-                        class="sidebar-link {% if active %}is-active{% endif %}"
-                        href="{{ url_for(item.endpoint) }}"
-                    >
-                        <span class="sidebar-link-label">{{ item.label }}</span>
-                    </a>
-                {% else %}
-                    <div class="sidebar-section-title">{{ item.label }}</div>
-                {% endif %}
 
-                {% if item.children %}
+            {% if item.children %}
+                <div class="sidebar-section">
+                    <div class="sidebar-section-title">
+                        {{ item.label }}
+                    </div>
+
                     <div class="sidebar-submenu">
                         {% for child in item.children %}
                             {% if child.endpoint %}
                                 <a
-                                    class="sidebar-sublink {% if request.endpoint == child.endpoint %}is-active{% endif %}"
-                                    href="{{ url_for(child.endpoint) }}"
+                                        class="sidebar-item {% if request.endpoint == child.endpoint %}is-active{% endif %}"
+                                        href="{{ url_for(child.endpoint) }}"
                                 >
+                               <span class="sidebar-item-icon">
+    <i data-lucide="{{ child.icon or 'circle' }}"></i>
+</span>
+                                    <span class="sidebar-item-label">
                                     {{ child.label }}
+                                </span>
                                 </a>
                             {% else %}
-                                <span class="sidebar-sublink is-disabled">{{ child.label }}</span>
+                                <span class="sidebar-item is-disabled">
+                                {{ child.label }}
+                            </span>
                             {% endif %}
                         {% endfor %}
                     </div>
-                {% endif %}
-            </div>
+                </div>
+            {% else %}
+                <a
+                        class="sidebar-item sidebar-item-main {% if active %}is-active{% endif %}"
+                        href="{{ url_for(item.endpoint) }}"
+                >
+             <span class="sidebar-item-icon">
+    <i data-lucide="{{ item.icon or 'circle' }}"></i>
+</span>
+                    <span class="sidebar-item-label">
+                    {{ item.label }}
+                </span>
+                </a>
+            {% endif %}
         {% endfor %}
     </nav>
 

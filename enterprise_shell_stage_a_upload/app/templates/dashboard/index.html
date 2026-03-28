@@ -1,0 +1,75 @@
+{% extends "_layouts/app_base.html" %}
+
+{% block title %}Dashboard | {{ branding.app_name }}{% endblock %}
+
+{% block admin_content %}
+    {% set breadcrumbs = [
+        {"label": "Dashboard", "url": None}
+    ] %}
+    {% set eyebrow = "Admin shell" %}
+    {% set title = "Dashboard" %}
+    {% set subtitle = "The shell now uses permission-based access control as the foundation for future enterprise modules." %}
+    {% set actions = '
+        <a class="btn btn-secondary" href="' ~ url_for("public.home") ~ '">View Public Site</a>
+    ' %}
+
+    {% include "_partials/page_header.html" %}
+
+    <section class="stats-grid">
+        {% with label="Total users", value=stats.total_users, hint="All accounts in the shell" %}
+            {% include "_components/stat_card.html" %}
+        {% endwith %}
+
+        {% with label="Active users", value=stats.active_users, hint="Accounts currently enabled" %}
+            {% include "_components/stat_card.html" %}
+        {% endwith %}
+
+        {% with label="Roles", value=stats.total_roles, hint="RBAC roles now stored in database" %}
+            {% include "_components/stat_card.html" %}
+        {% endwith %}
+
+        {% with label="Permissions", value=stats.total_permissions, hint="System permissions seeded from registry" %}
+            {% include "_components/stat_card.html" %}
+        {% endwith %}
+    </section>
+
+    <section class="dashboard-grid dashboard-grid-2">
+        <article class="info-card">
+            <h3>RBAC foundation is active</h3>
+            <p>
+                The shell now uses database-backed roles and permissions instead of relying
+                only on authentication state. This creates the foundation for user management,
+                role assignment, settings access, audit visibility, and future module control.
+            </p>
+            <ul class="feature-list">
+                <li>Permissions are centrally registered</li>
+                <li>Roles and permissions are stored in database tables</li>
+                <li>Route protection now supports permission checks</li>
+                <li>Super-admin remains a controlled bypass</li>
+            </ul>
+        </article>
+
+        <article class="info-card">
+            <h3>Current account access</h3>
+            <dl class="status-list">
+                <dt>Name</dt>
+                <dd>{{ current_user.display_name }}</dd>
+
+                <dt>Email</dt>
+                <dd>{{ current_user.email }}</dd>
+
+                <dt>Super admin</dt>
+                <dd>{{ "Yes" if current_user.is_superadmin else "No" }}</dd>
+
+                <dt>Roles</dt>
+                <dd>
+                    {% set role_names = current_user.get_role_names() %}
+                    {{ role_names|join(", ") if role_names else "None assigned" }}
+                </dd>
+
+                <dt>Permissions</dt>
+                <dd>{{ current_user.get_permission_names()|length }}</dd>
+            </dl>
+        </article>
+    </section>
+{% endblock %}

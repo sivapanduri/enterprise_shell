@@ -17,12 +17,13 @@ def get_admin_menu() -> list[MenuItem]:
             key="dashboard",
             label="Dashboard",
             endpoint="dashboard.index",
-            icon="dashboard",
+            icon="layout-dashboard",
         ),
+
         MenuItem(
             key="administration",
             label="Administration",
-            icon="admin",
+            icon="settings-2",
             children=[
                 MenuItem(
                     key="users",
@@ -40,7 +41,7 @@ def get_admin_menu() -> list[MenuItem]:
                     key="permissions",
                     label="Permissions",
                     endpoint="roles.permission_catalog",
-                    icon="shield",
+                    icon="key",
                 ),
                 MenuItem(
                     key="settings",
@@ -56,10 +57,11 @@ def get_admin_menu() -> list[MenuItem]:
                 ),
             ],
         ),
+
         MenuItem(
             key="system",
             label="System",
-            icon="system",
+            icon="server",
             children=[
                 MenuItem(
                     key="audit",
@@ -71,7 +73,7 @@ def get_admin_menu() -> list[MenuItem]:
                     key="docs",
                     label="Documentation",
                     endpoint=None,
-                    icon="docs",
+                    icon="book-open",
                 ),
             ],
         ),

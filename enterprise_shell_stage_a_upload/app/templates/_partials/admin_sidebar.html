@@ -1,0 +1,61 @@
+<aside class="admin-sidebar">
+    <div class="sidebar-brand">
+        <a class="sidebar-brand-link" href="{{ shell_links.dashboard }}">
+            <img
+                src="{{ url_for('static', filename=branding.app_logo) }}"
+                alt="{{ branding.app_name }} logo"
+                class="sidebar-brand-logo"
+            >
+            <div class="sidebar-brand-copy">
+                <span class="sidebar-brand-title">{{ branding.app_name }}</span>
+                <span class="sidebar-brand-subtitle">Admin Workspace</span>
+            </div>
+        </a>
+    </div>
+
+    <nav class="sidebar-nav">
+        {% for item in admin_menu %}
+            {% set active = is_menu_item_active(item) %}
+            <div class="sidebar-group {% if active %}is-active{% endif %}">
+                {% if item.endpoint %}
+                    <a
+                        class="sidebar-link {% if active %}is-active{% endif %}"
+                        href="{{ url_for(item.endpoint) }}"
+                    >
+                        <span class="sidebar-link-label">{{ item.label }}</span>
+                    </a>
+                {% else %}
+                    <div class="sidebar-section-title">{{ item.label }}</div>
+                {% endif %}
+
+                {% if item.children %}
+                    <div class="sidebar-submenu">
+                        {% for child in item.children %}
+                            {% if child.endpoint %}
+                                <a
+                                    class="sidebar-sublink {% if request.endpoint == child.endpoint %}is-active{% endif %}"
+                                    href="{{ url_for(child.endpoint) }}"
+                                >
+                                    {{ child.label }}
+                                </a>
+                            {% else %}
+                                <span class="sidebar-sublink is-disabled">{{ child.label }}</span>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </nav>
+
+    <div class="sidebar-footer">
+        <div class="sidebar-footer-label">Access mode</div>
+        <div class="sidebar-footer-value">
+            {% if current_user.is_superadmin %}
+                Super Admin
+            {% else %}
+                Permission Driven
+            {% endif %}
+        </div>
+    </div>
+</aside>

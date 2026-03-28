@@ -1,0 +1,24 @@
+<header class="admin-topbar">
+    <div class="admin-topbar-left">
+        <div class="topbar-title-group">
+            <span class="topbar-overline">Enterprise Shell</span>
+            <h1 class="topbar-title">{{ branding.app_name }}</h1>
+        </div>
+    </div>
+
+    <div class="admin-topbar-right">
+        <a class="topbar-link" href="{{ shell_links.public_home }}">Public Site</a>
+
+        <div class="topbar-user-card">
+            <div class="topbar-user-meta">
+                <span class="topbar-user-name">{{ current_user.display_name }}</span>
+                <span class="topbar-user-email">{{ current_user.email }}</span>
+            </div>
+
+            <form method="post" action="{{ shell_links.logout }}" class="inline-form">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="btn btn-secondary btn-small">Logout</button>
+            </form>
+        </div>
+    </div>
+</header>

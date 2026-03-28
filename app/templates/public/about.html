@@ -5,36 +5,77 @@
 {% block content %}
 <section class="content-section">
     <div class="page-header">
-        <span class="eyebrow">About the shell</span>
-        <h1>Why this foundation exists</h1>
+        <span class="eyebrow">Platform Overview</span>
+        <h1>Built for secure administration and controlled growth</h1>
         <p class="page-subtitle">
-            This project is a reusable enterprise base meant to support multiple
-            future applications with a stable architectural core.
+            {{ branding.app_name }} provides a centralized administrative foundation for
+            identity, access, governance, and operational oversight across internal
+            enterprise systems.
         </p>
     </div>
 
     <div class="section-grid">
         <article class="info-card">
-            <h3>Server-rendered first</h3>
+            <span class="card-kicker">Identity & Access</span>
+            <h3>Centralized administration for users and permissions</h3>
             <p>
-                The shell is built for maintainable enterprise workflows using Flask,
-                Jinja, forms, and clear route/service separation.
+                Manage user access, role assignments, and permission boundaries through
+                consistent workflows designed for clarity and control.
             </p>
         </article>
 
         <article class="info-card">
-            <h3>Reusable by design</h3>
+            <span class="card-kicker">Operational Governance</span>
+            <h3>Structured oversight for critical administrative activity</h3>
             <p>
-                Branding, settings, navigation, authentication, audit, and restoration
-                are intended to be reusable across future business products.
+                Support accountability through settings, audit visibility, and controlled
+                administrative operations that align with enterprise needs.
             </p>
         </article>
 
         <article class="info-card">
-            <h3>Production-minded structure</h3>
+            <span class="card-kicker">Reusable Platform Base</span>
+            <h3>A stable core for future business applications</h3>
             <p>
-                The app factory, config system, extension registry, blueprint structure,
-                and deployment entry points are established from the start.
+                The platform is designed to support additional modules and products
+                without compromising the integrity of the administrative foundation.
+            </p>
+        </article>
+    </div>
+</section>
+
+<section class="content-section content-section--alt">
+    <div class="page-header">
+        <span class="eyebrow">Design Principles</span>
+        <h2>Practical, maintainable, and enterprise-ready</h2>
+        <p class="page-subtitle">
+            The platform emphasizes long-term maintainability, operational simplicity,
+            and clear administrative workflows.
+        </p>
+    </div>
+
+    <div class="section-grid">
+        <article class="info-card">
+            <h3>Server-rendered by design</h3>
+            <p>
+                A server-rendered approach keeps the interface easier to reason about,
+                simpler to maintain, and better suited for administrative business systems.
+            </p>
+        </article>
+
+        <article class="info-card">
+            <h3>Configurable and adaptable</h3>
+            <p>
+                Branding, navigation, settings, and administrative surfaces can be adapted
+                for different products while preserving a shared platform standard.
+            </p>
+        </article>
+
+        <article class="info-card">
+            <h3>Prepared for enterprise operations</h3>
+            <p>
+                The structure supports authentication, access control, auditability,
+                recovery workflows, and future platform expansion with a controlled base.
             </p>
         </article>
     </div>
